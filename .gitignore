@@ -1,5 +1,8 @@
-desktop.ini
+node_modulesdesktop.ini
 .DS_Store
 .vscode/
-node_modules/
+dist/
 *.ico
+.env
+.env.local
+.env.production.local
