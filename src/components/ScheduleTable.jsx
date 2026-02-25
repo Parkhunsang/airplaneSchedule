@@ -21,7 +21,7 @@ function ScheduleTable({ schedules, onDelete }) {
       </h2>
       <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="w-full text-sm md:text-base">
-          <thead>
+          <thead className="hidden sm:table-header-group">
             <tr className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
                 날짜
@@ -29,7 +29,7 @@ function ScheduleTable({ schedules, onDelete }) {
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
                 출발
               </th>
-              <th className="table-cell px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
+              <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
                 도착
               </th>
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
@@ -45,39 +45,65 @@ function ScheduleTable({ schedules, onDelete }) {
           </thead>
           <tbody>
             {schedules.map((schedule) => (
-              <tr
-                key={schedule.id}
-                className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm md:text-base"
-              >
-                <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
-                  {schedule.date}
-                </td>
-                <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
-                  {schedule.departureTime}
-                </td>
-                <td className="table-cell px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
-                  {schedule.arrivalTime}
-                </td>
-                <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
-                  <span className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
-                    {schedule.aircraft}
-                  </span>
-                </td>
-                <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
-                  <span className="inline-block bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
-                    {schedule.destination}
-                  </span>
-                </td>
-                <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
-                  <button
-                    onClick={() => onDelete(schedule.id)}
-                    title="삭제"
-                    className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 px-2 sm:px-3 py-1 text-sm rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-600 transition-all transform hover:scale-105"
-                  >
-                    삭제
-                  </button>
-                </td>
-              </tr>
+              <React.Fragment key={schedule.id}>
+                <tr className="sm:hidden border-b border-gray-200 dark:border-gray-700">
+                  <td className="px-3 py-3" colSpan={6}>
+                    <div className="flex items-center gap-3 text-gray-900 dark:text-gray-100 text-sm">
+                      <span>{schedule.date}</span>
+                      <span>{schedule.departureTime}</span>
+                      <span>{schedule.arrivalTime}</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full text-xs font-medium">
+                          {schedule.aircraft}
+                        </span>
+                        <span className="inline-block bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded-full text-xs font-medium">
+                          {schedule.destination}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => onDelete(schedule.id)}
+                        title="삭제"
+                        className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 px-2 py-1 text-xs rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-600 transition-all"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr className="hidden sm:table-row border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm md:text-base">
+                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
+                    {schedule.date}
+                  </td>
+                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
+                    {schedule.departureTime}
+                  </td>
+                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
+                    {schedule.arrivalTime}
+                  </td>
+                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
+                    <span className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                      {schedule.aircraft}
+                    </span>
+                  </td>
+                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
+                    <span className="inline-block bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                      {schedule.destination}
+                    </span>
+                  </td>
+                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
+                    <button
+                      onClick={() => onDelete(schedule.id)}
+                      title="삭제"
+                      className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 px-2 sm:px-3 py-1 text-sm rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-600 transition-all transform hover:scale-105"
+                    >
+                      삭제
+                    </button>
+                  </td>
+                </tr>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
