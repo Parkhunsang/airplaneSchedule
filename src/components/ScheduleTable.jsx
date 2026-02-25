@@ -1,14 +1,14 @@
-import React from "react";
+﻿import React from "react";
 
 function ScheduleTable({ schedules, onDelete }) {
   if (schedules.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-none p-6 sm:p-8 md:p-12 mb-6 sm:mb-8 shadow-md text-center text-gray-600 dark:text-gray-400">
         <p className="text-base sm:text-lg font-medium mb-2">
-          📋 아직 등록된 비행편이 없습니다.
+          ?뱥 ?꾩쭅 ?깅줉??鍮꾪뻾?몄씠 ?놁뒿?덈떎.
         </p>
         <p className="text-sm sm:text-base">
-          위의 폼에서 새로운 비행편을 추가해보세요!
+          ?꾩쓽 ?쇱뿉???덈줈??鍮꾪뻾?몄쓣 異붽??대낫?몄슂!
         </p>
       </div>
     );
@@ -17,29 +17,29 @@ function ScheduleTable({ schedules, onDelete }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-none p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-md w-full min-h-[400px]">
       <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
-        📊 등록된 비행편 목록
+        ?뱤 ?깅줉??鍮꾪뻾??紐⑸줉
       </h2>
       <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="w-full text-sm md:text-base">
           <thead>
             <tr className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
-                날짜
+                ?좎쭨
               </th>
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
-                출발
+                異쒕컻
               </th>
-              <th className="hidden sm:table-cell px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
-                도착
-              </th>
-              <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
-                편명
+              <th className="table-cell px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
+                ?꾩갑
               </th>
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
-                도착지
+                ?몃챸
               </th>
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
-                작업
+                ?꾩갑吏
+              </th>
+              <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
+                ?묒뾽
               </th>
             </tr>
           </thead>
@@ -55,7 +55,7 @@ function ScheduleTable({ schedules, onDelete }) {
                 <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
                   {schedule.departureTime}
                 </td>
-                <td className="hidden sm:table-cell px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
+                <td className="table-cell px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900 dark:text-gray-100">
                   {schedule.arrivalTime}
                 </td>
                 <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
@@ -71,10 +71,10 @@ function ScheduleTable({ schedules, onDelete }) {
                 <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
                   <button
                     onClick={() => onDelete(schedule.id)}
-                    title="삭제"
+                    title="??젣"
                     className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 px-2 sm:px-3 py-1 text-sm rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-600 transition-all transform hover:scale-105"
                   >
-                    🗑️
+                    ?뿊截?
                   </button>
                 </td>
               </tr>
@@ -83,7 +83,7 @@ function ScheduleTable({ schedules, onDelete }) {
         </table>
       </div>
       <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700 text-right text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-        <p>총 {schedules.length}개의 비행편이 등록되어 있습니다.</p>
+        <p>珥?{schedules.length}媛쒖쓽 鍮꾪뻾?몄씠 ?깅줉?섏뼱 ?덉뒿?덈떎.</p>
       </div>
     </div>
   );
