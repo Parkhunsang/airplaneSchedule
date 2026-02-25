@@ -132,9 +132,9 @@ function ScheduleForm({ onAddSchedule }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-md w-full min-h-[400px]">
+    <div className="bg-white dark:bg-gray-800 rounded-none p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-md w-full min-h-[400px]">
       <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
-        ✈️ 새 비행편 추가
+        새 비행편 추가
       </h2>
       <form
         onSubmit={handleSubmit}

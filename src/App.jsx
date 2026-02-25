@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import ScheduleForm from "./components/ScheduleForm";
 import ScheduleTable from "./components/ScheduleTable";
 import { db } from "./firebaseConfig";
@@ -15,24 +15,36 @@ function App() {
   const [theme, setTheme] = useState("light");
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const isDark = theme === "dark";
+    document.documentElement.classList.toggle("dark", isDark);
+
+    return () => {
+      document.documentElement.classList.remove("dark");
+    };
+  }, [theme]);
+
   // Firestore에서 실시간 스케줄 가져오기
   useEffect(() => {
-    try {
-      const schedulesCollection = collection(db, "schedules");
-      const unsubscribe = onSnapshot(schedulesCollection, (snapshot) => {
+    const schedulesCollection = collection(db, "schedules");
+
+    const unsubscribe = onSnapshot(
+      schedulesCollection,
+      (snapshot) => {
         const schedulesData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
         setSchedules(schedulesData);
         setLoading(false);
-      });
+      },
+      (error) => {
+        console.error("Firestore 연동 오류:", error);
+        setLoading(false);
+      },
+    );
 
-      return () => unsubscribe();
-    } catch (error) {
-      console.error("Firestore 연동 오류:", error);
-      setLoading(false);
-    }
+    return () => unsubscribe();
   }, []);
 
   const handleAddSchedule = async (newSchedule) => {
@@ -75,10 +87,8 @@ function App() {
     <div className={`flex flex-col min-h-screen ${bgClass}`}>
       {/* Header */}
       <header className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-6 sm:py-8 px-3 sm:px-4 shadow-lg w-full">
-        <div className="max-w-6xl mx-auto w-full">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-            ✈️ 항공 스케줄 관리
-          </h1>
+        <div className="max-w-6xl mx-auto w-full h-12 flex items-center px-4">
+          <h1 className="text-xl sm:text-2xl font-bold">✈️ 항공 스케줄 관리</h1>
         </div>
       </header>
 

@@ -1,4 +1,5 @@
-node_modulesdesktop.ini
+﻿node_modules/
+desktop.ini
 .DS_Store
 .vscode/
 dist/

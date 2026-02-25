@@ -3,7 +3,7 @@ import React from "react";
 function ScheduleTable({ schedules, onDelete }) {
   if (schedules.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 sm:p-8 md:p-12 mb-6 sm:mb-8 shadow-md text-center text-gray-600 dark:text-gray-400">
+      <div className="bg-white dark:bg-gray-800 rounded-none p-6 sm:p-8 md:p-12 mb-6 sm:mb-8 shadow-md text-center text-gray-600 dark:text-gray-400">
         <p className="text-base sm:text-lg font-medium mb-2">
           📋 아직 등록된 비행편이 없습니다.
         </p>
@@ -15,7 +15,7 @@ function ScheduleTable({ schedules, onDelete }) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-md w-full min-h-[400px]">
+    <div className="bg-white dark:bg-gray-800 rounded-none p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 shadow-md w-full min-h-[400px]">
       <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
         📊 등록된 비행편 목록
       </h2>
