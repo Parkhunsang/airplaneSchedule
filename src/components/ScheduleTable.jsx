@@ -3,7 +3,7 @@
 function ScheduleTable({ schedules, onDelete }) {
   if (schedules.length === 0) {
     return (
-      <div className="rounded-none p-6 sm:p-8 md:p-12 mb-0 text-center text-gray-600 dark:text-gray-400 bg-white">
+      <div className="rounded-none p-3 mb-0 text-center text-gray-600 dark:text-gray-400 bg-white">
         <p className="text-base sm:text-lg font-medium mb-2">
           아직 등록된 비행편이 없습니다.
         </p>
@@ -15,11 +15,11 @@ function ScheduleTable({ schedules, onDelete }) {
   }
 
   return (
-    <div className="rounded-none p-[12px] sm:p-6 md:p-8 mb-0 w-full min-h-[400px] bg-white">
+    <div className="rounded-none p-3 mb-0 w-full min-h-[400px] bg-white">
       <p className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900">
         등록된 비행편 목록
       </p>
-      <div className="overflow-x-auto -mx-4 sm:mx-0">
+      <div className="overflow-x-auto">
         <table className="w-full text-sm md:text-base">
           <thead className="hidden sm:table-header-group">
             <tr className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">

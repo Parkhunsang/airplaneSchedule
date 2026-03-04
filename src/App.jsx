@@ -73,7 +73,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-2 sm:px-4 py-4 sm:py-8 w-full">
+      <main className="flex-1 px-3 py-4 sm:py-8 w-full">
         <div className="w-full h-full">
           {loading && (
             <div className="flex flex-col justify-center items-center py-12 gap-4">
