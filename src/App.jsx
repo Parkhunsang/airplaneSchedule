@@ -18,6 +18,17 @@ function App() {
   // Firestore에서 실시간 스케줄 가져오기
   useEffect(() => {
     const schedulesCollection = collection(db, "schedules");
+    const loadingStartTime = Date.now();
+    let loadingTimer;
+
+    const finishLoading = () => {
+      const elapsed = Date.now() - loadingStartTime;
+      const remaining = Math.max(0, 2000 - elapsed);
+
+      loadingTimer = setTimeout(() => {
+        setLoading(false);
+      }, remaining);
+    };
 
     const unsubscribe = onSnapshot(
       schedulesCollection,
@@ -27,15 +38,20 @@ function App() {
           ...doc.data(),
         }));
         setSchedules(schedulesData);
-        setLoading(false);
+        finishLoading();
       },
       (error) => {
         console.error("Firestore 연동 오류:", error);
-        setLoading(false);
+        finishLoading();
       },
     );
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (loadingTimer) {
+        clearTimeout(loadingTimer);
+      }
+    };
   }, []);
 
   const handleAddSchedule = async (newSchedule) => {
@@ -73,14 +89,14 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-3 py-4 sm:py-8 w-full">
+      <main className="flex-1 p-3 w-full">
         <div className="w-full h-full">
           {loading && (
-            <div className="flex flex-col justify-center items-center py-12 gap-4">
+            <div className="flex flex-col justify-center items-center py-12 gap-4 min-h-screen w-full">
               <img
                 src={loadingImage}
                 alt="로딩 이미지"
-                className="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-xl shadow-md"
+                className="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-xl shadow-md w-full h-full object-cover"
               />
               <p className="text-lg font-semibold text-gray-700">
                 Firebase에서 데이터를 불러오는 중...
