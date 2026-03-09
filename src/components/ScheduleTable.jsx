@@ -15,12 +15,12 @@ function ScheduleTable({ schedules, onDelete }) {
   }
 
   return (
-    <div className="rounded-none p-3 mb-0 w-full min-h-[400px] bg-white">
+    <div className="min-h-[200px]">
       <p className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900">
         등록된 비행편 목록
       </p>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm md:text-base">
+      <div>
+        <table className="w-full text-sm md:text-base border-separate border-spacing-y-[6px] border-spacing-x-0">
           <thead className="hidden sm:table-header-group">
             <tr className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">
               <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left font-semibold">
@@ -43,81 +43,79 @@ function ScheduleTable({ schedules, onDelete }) {
               </th>
             </tr>
           </thead>
+          {/* 모바일 */}
           <tbody>
             {schedules.map((schedule) => (
               <React.Fragment key={schedule.id}>
-                <tr className="sm:hidden border-b border-gray-200 dark:border-gray-700">
+                <tr className="sm:hidden border-b border-gray-200">
                   <td className="px-3 py-3" colSpan={6}>
                     <div className="flex flex-col gap-3">
-                      <div className="grid grid-cols-3 gap-2 text-gray-900 text-xs">
-                        <div>
-                          <p className="font-semibold">날짜</p>
-                          <p className="text-sm">{schedule.date}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold">출발</p>
-                          <p className="text-sm">{schedule.departureTime}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold">도착</p>
-                          <p className="text-sm">{schedule.arrivalTime}</p>
-                        </div>
+                      <div className="flex items-center gap-6 text-gray-900 text-xs border-b border-gray-200 pb-2">
+                        <p className="font-light">날짜</p>
+                        <p className="text-sm font-light">{schedule.date}</p>
                       </div>
-                      <div className="grid grid-cols-3 gap-2 text-xs">
-                        <div>
+                      <div className="grid grid-cols-2 gap-2 text-xs border-b border-gray-200 pb-2">
+                        <div className="flex flex-col gap-1">
+                          <p className="font-semibold">출발</p>
+                          <p className="text-sm font-normal">
+                            {schedule.departureTime}
+                          </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
                           <p className="font-semibold text-gray-900">편명</p>
-                          <span className="inline-flex items-center justify-center min-w-[88px] mt-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1.5 rounded-full text-xs font-medium">
+                          <span className="inline-flex items-center justify-center min-w-[88px] bg-blue-100 text-blue-800 font-medium rounded-full">
                             {schedule.aircraft}
                           </span>
                         </div>
-                        <div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-xs border-b border-gray-200 pb-2">
+                        <div className="flex flex-col gap-1">
+                          <p className="font-semibold">도착</p>
+                          <p className="text-sm font-normal">
+                            {schedule.arrivalTime}
+                          </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
                           <p className="font-semibold text-gray-900">도착지</p>
-                          <span className="inline-flex items-center justify-center min-w-[120px] mt-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1.5 rounded-full text-xs font-medium">
+                          <span className="inline-flex items-center justify-center min-w-[88px] bg-purple-100 text-purple-800 font-medium rounded-full">
                             {schedule.destination}
                           </span>
                         </div>
-                        <div className="flex flex-col">
-                          <p className="font-semibold text-gray-900">작업</p>
-                          <button
-                            onClick={() => onDelete(schedule.id)}
-                            title="삭제"
-                            className="mt-1 w-fit bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 px-2 py-1 text-xs rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-600 transition-all"
-                          >
-                            삭제
-                          </button>
-                        </div>
+                      </div>
+                      <div className="flex flex-col items-center gap-1 border-b bg-red-200 h-8 justify-center">
+                        <button
+                          onClick={() => onDelete(schedule.id)}
+                          title="삭제"
+                          className="mt-1 w-fit px-2 py-1 text-lg rounded-lg"
+                        >
+                          🗑️
+                        </button>
                       </div>
                     </div>
                   </td>
                 </tr>
-
-                <tr className="hidden sm:table-row border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm md:text-base">
-                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900">
-                    {schedule.date}
-                  </td>
-                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900">
-                    {schedule.departureTime}
-                  </td>
-                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4 text-gray-900">
-                    {schedule.arrivalTime}
-                  </td>
-                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
-                    <span className="inline-flex items-center justify-center min-w-[88px] bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                {/* 웹 */}
+                <tr className="hidden sm:table-row border-b border-gray-200 text-sm md:text-base">
+                  <td>{schedule.date}</td>
+                  <td>{schedule.departureTime}</td>
+                  <td>{schedule.arrivalTime}</td>
+                  <td>
+                    <span className="inline-flex items-center justify-center px-3 py-1 min-w-[80px] bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm font-medium">
                       {schedule.aircraft}
                     </span>
                   </td>
-                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
-                    <span className="inline-flex items-center justify-center min-w-[120px] bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                  <td>
+                    <span className="inline-flex items-center justify-center px-3 py-1 min-w-[340px] bg-purple-100 text-purple-800 rounded-full text-xs sm:text-sm font-medium">
                       {schedule.destination}
                     </span>
                   </td>
-                  <td className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
+                  <td className="text-center">
                     <button
                       onClick={() => onDelete(schedule.id)}
                       title="삭제"
-                      className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 px-2 sm:px-3 py-1 text-sm rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-600 transition-all transform hover:scale-105"
+                      className="bg-red-100 text-red-600 border border-red-300 px-2 sm:px-3 py-1 text-sm rounded-lg"
                     >
-                      삭제
+                      🗑️
                     </button>
                   </td>
                 </tr>

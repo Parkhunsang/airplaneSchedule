@@ -19,7 +19,7 @@ function ScheduleForm({ onAddSchedule }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -32,13 +32,17 @@ function ScheduleForm({ onAddSchedule }) {
       return;
     }
 
-    onAddSchedule({
-      date: formData.date,
-      departureTime: formData.departureTime,
-      arrivalTime: formData.arrivalTime || "-",
-      aircraft: formData.aircraft,
-      destination: formData.destination,
-    });
+    try {
+      await onAddSchedule({
+        date: formData.date,
+        departureTime: formData.departureTime,
+        arrivalTime: formData.arrivalTime || "-",
+        aircraft: formData.aircraft,
+        destination: formData.destination,
+      });
+    } catch (error) {
+      return;
+    }
 
     setFormData({
       date: "",
@@ -50,8 +54,8 @@ function ScheduleForm({ onAddSchedule }) {
   };
 
   return (
-    <div className="rounded-none p-3 mb-0 w-full min-h-[400px] bg-white-200">
-      <p className="bg-yellow-200 text-xl sm:text-2xl font-bold mt-10 mb-10 text-gray-900">
+    <div className="min-h-[400px]">
+      <p className="text-xl sm:text-2xl font-bold text-gray-900">
         새 비행편 추가
       </p>
       <form
@@ -157,7 +161,7 @@ function ScheduleForm({ onAddSchedule }) {
 
         <button
           type="submit"
-          className="col-span-1 sm:col-span-2 lg:col-span-1 px-6 py-3 text-base font-semibold min-h-[48px] bg-gradient-to-r from-purple-600 to-purple-800 text-white rounded-3xl hover:shadow-lg transform hover:scale-105 transition-all self-end"
+          className="col-span-1 sm:col-span-2 lg:col-span-1 px-6 py-3 text-base font-semibold min-h-[48px] bg-purple-300 text-white rounded-3xl hover:shadow-lg transform hover:scale-105 transition-all self-end shadow-lg"
         >
           비행편 추가
         </button>

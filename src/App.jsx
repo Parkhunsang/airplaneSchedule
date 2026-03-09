@@ -2,14 +2,11 @@
 import ScheduleForm from "./components/ScheduleForm";
 import ScheduleTable from "./components/ScheduleTable";
 import loadingImage from "./assets/loading.jpg";
-import { db } from "./firebaseConfig";
 import {
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  onSnapshot,
-} from "firebase/firestore";
+  subscribeSchedules,
+  addSchedule,
+  deleteSchedule,
+} from "./services/scheduleService";
 
 function App() {
   const [schedules, setSchedules] = useState([]);
@@ -17,26 +14,20 @@ function App() {
 
   // Firestore에서 실시간 스케줄 가져오기
   useEffect(() => {
-    const schedulesCollection = collection(db, "schedules");
     const loadingStartTime = Date.now();
     let loadingTimer;
 
     const finishLoading = () => {
       const elapsed = Date.now() - loadingStartTime;
-      const remaining = Math.max(0, 2000 - elapsed);
+      const remaining = Math.max(0, 100 - elapsed);
 
       loadingTimer = setTimeout(() => {
         setLoading(false);
       }, remaining);
     };
 
-    const unsubscribe = onSnapshot(
-      schedulesCollection,
-      (snapshot) => {
-        const schedulesData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+    const unsubscribe = subscribeSchedules(
+      (schedulesData) => {
         setSchedules(schedulesData);
         finishLoading();
       },
@@ -56,22 +47,18 @@ function App() {
 
   const handleAddSchedule = async (newSchedule) => {
     try {
-      const schedulesCollection = collection(db, "schedules");
-      await addDoc(schedulesCollection, {
-        ...newSchedule,
-        createdAt: new Date().toISOString(),
-      });
+      await addSchedule(newSchedule);
       // setSchedules는 onSnapshot 리스너에서 자동으로 업데이트됨
     } catch (error) {
       console.error("스케줄 추가 오류:", error);
       alert("스케줄 추가에 실패했습니다. Firebase를 설정해주세요.");
+      throw error;
     }
   };
 
   const handleDeleteSchedule = async (id) => {
     try {
-      const scheduleDoc = doc(db, "schedules", id);
-      await deleteDoc(scheduleDoc);
+      await deleteSchedule(id);
       // setSchedules는 onSnapshot 리스너에서 자동으로 업데이트됨
     } catch (error) {
       console.error("스케줄 삭제 오류:", error);
@@ -82,21 +69,19 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen bg-white text-gray-900">
       {/* Header */}
-      <header className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-6 sm:py-8 px-3 sm:px-4 shadow-lg w-full">
-        <div className="max-w-6xl mx-auto w-full h-12 flex items-center px-4">
-          <h1 className="text-xl sm:text-2xl font-bold">✈️ 항공 스케줄 관리</h1>
-        </div>
+      <header className="bg-purple-300 text-white w-full h-12 shadow-lg flex items-center mb-10">
+        <h1 className="text-xl sm:text-2xl font-bold">✈️ SCHEDULE</h1>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 p-3 w-full">
+      <main className="flex-1 w-full h-full">
         <div className="w-full h-full">
           {loading && (
             <div className="flex flex-col justify-center items-center py-12 gap-4 min-h-screen w-full">
               <img
                 src={loadingImage}
                 alt="로딩 이미지"
-                className="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-xl shadow-md w-full h-full object-cover"
+                className="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-xl shadow-md"
               />
               <p className="text-lg font-semibold text-gray-700">
                 Firebase에서 데이터를 불러오는 중...
@@ -104,7 +89,7 @@ function App() {
             </div>
           )}
           {!loading && (
-            <div className="flex flex-col gap-[20px]">
+            <div className="flex flex-col gap-[20px] px-3">
               <ScheduleForm onAddSchedule={handleAddSchedule} />
               <ScheduleTable
                 schedules={schedules}
@@ -118,7 +103,7 @@ function App() {
       {/* Footer */}
       <footer className="text-center py-4 sm:py-6 px-3 sm:px-4 mt-auto border-t w-full bg-white border-gray-200">
         <p className="text-xs sm:text-sm opacity-75">
-          © 2026 Schedule App - 박훈상과 함께
+          © 2026 Schedule App - For Han Bi Yun
         </p>
       </footer>
     </div>
