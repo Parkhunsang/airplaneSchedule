@@ -6,4 +6,4 @@ dist/
 *.ico
 .env
 .env.local
-.env.production.local
+.env.example.local
