@@ -86,8 +86,8 @@ function App() {
         ) : (
           <div className="overflow-hidden">
             <div
-              className="flex w-[300%] transition-transform duration-200 ease-out"
-              style={{ transform: `translateX(-${currentScreen * (100 / 3)}%)` }}
+              className="flex transition-transform duration-200 ease-out"
+              style={{ transform: `translateX(-${currentScreen * 100}%)` }}
             >
               <ScheduleEntryScreen
                 schedules={schedules}

@@ -2,7 +2,7 @@ import React from "react";
 
 function WallpaperSetupScreen({ onPrev, onNext }) {
   return (
-    <section className="w-full shrink-0 px-3">
+    <section className="min-w-full flex-none px-3">
       <div className="flex min-h-[320px] flex-col justify-between rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
         <div>
           <p className="text-sm font-semibold text-purple-600">화면 2</p>

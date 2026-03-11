@@ -9,7 +9,7 @@ function ScheduleEntryScreen({
   onNext,
 }) {
   return (
-    <section className="w-full shrink-0 px-3">
+    <section className="min-w-full flex-none px-3">
       <div className="flex flex-col gap-5">
         <ScheduleForm onAddSchedule={onAddSchedule} />
         <ScheduleTable schedules={schedules} onDelete={onDeleteSchedule} />
