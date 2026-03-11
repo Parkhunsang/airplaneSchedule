@@ -161,9 +161,10 @@ function ScheduleForm({ onAddSchedule }) {
 
         <button
           type="submit"
-          className="col-span-1 sm:col-span-2 lg:col-span-1 px-6 py-3 text-base font-semibold min-h-[48px] bg-purple-300 text-white rounded-3xl hover:shadow-lg transform hover:scale-105 transition-all self-end shadow-lg"
+          className="col-span-1 sm:col-span-2 lg:col-span-1 inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold min-h-[48px] bg-purple-300 text-white rounded-3xl hover:shadow-lg transform hover:scale-105 transition-all self-end shadow-lg"
         >
-          비행편 추가
+          <span className="text-lg leading-none">+</span>
+          <span>비행편 추가</span>
         </button>
       </form>
     </div>

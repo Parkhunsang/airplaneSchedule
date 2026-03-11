@@ -131,22 +131,34 @@ function WallpaperBuilder({
           </button>
         </div>
       ) : (
-        <div>
-          <p className="mb-3 text-sm sm:text-base text-gray-700">
-            Step 3: Result
-          </p>
-          {generatedWallpaperUrl ? (
-            <img
-              src={generatedWallpaperUrl}
-              alt="generated wallpaper"
-              className="w-full rounded-lg border border-gray-200"
-            />
-          ) : (
-            <p className="text-sm text-gray-600">
-              No result yet. Click Make wallpaper in Step 2.
-            </p>
-          )}
-          <div className="mt-5 flex flex-wrap gap-2">
+        <div className="space-y-4">
+          <p className="text-sm sm:text-base text-gray-700">Step 3: Result</p>
+          <div className="rounded-[2rem] border border-sky-100 bg-[linear-gradient(180deg,#eef8ff_0%,#d7edf9_100%)] p-4 shadow-[0_20px_60px_rgba(116,157,183,0.18)]">
+            {generatedWallpaperUrl ? (
+              <div className="mx-auto max-w-[320px] rounded-[2.5rem] border-[10px] border-slate-950 bg-slate-950 p-2 shadow-[0_30px_80px_rgba(15,23,42,0.35)]">
+                <div className="mx-auto mb-2 h-6 w-24 rounded-full bg-slate-900" />
+                <img
+                  src={generatedWallpaperUrl}
+                  alt="generated wallpaper"
+                  className="w-full rounded-[1.8rem] border border-white/30"
+                />
+              </div>
+            ) : (
+              <p className="text-sm text-gray-600">
+                No result yet. Click Make wallpaper in Step 2.
+              </p>
+            )}
+            <div className="mt-4 rounded-[1.5rem] bg-white/60 p-4 backdrop-blur">
+              <p className="font-semibold text-slate-800">
+                Figma-inspired preview
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Large photo header, soft sky background, and a calendar grid
+                with destination cards.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={onDownload}

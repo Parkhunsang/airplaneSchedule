@@ -30,7 +30,7 @@ export const subscribeSchedules = (onData, onError) => {
 export const addSchedule = async (newSchedule) => {
   const schedulesCollection = collection(db, "schedules");
 
-  await addDoc(schedulesCollection, {
+  return addDoc(schedulesCollection, {
     ...newSchedule,
     createdAt: new Date().toISOString(),
   });

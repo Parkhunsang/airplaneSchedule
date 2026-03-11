@@ -1,0 +1,32 @@
+import React from "react";
+import ScheduleForm from "../ScheduleForm";
+import ScheduleTable from "../ScheduleTable";
+
+function ScheduleEntryScreen({
+  schedules,
+  onAddSchedule,
+  onDeleteSchedule,
+  onNext,
+}) {
+  return (
+    <section className="w-full shrink-0 px-3">
+      <div className="flex flex-col gap-5">
+        <ScheduleForm onAddSchedule={onAddSchedule} />
+        <ScheduleTable schedules={schedules} onDelete={onDeleteSchedule} />
+        <div className="flex justify-end pb-6">
+          <button
+            type="button"
+            onClick={onNext}
+            disabled={schedules.length === 0}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-purple-500 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:text-base"
+          >
+            <span>다음</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default ScheduleEntryScreen;
