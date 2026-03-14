@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import loadingImage from "./assets/loading.jpg";
 import ScheduleEntryScreen from "./components/screens/ScheduleEntryScreen";
 import WallpaperSetupScreen from "./components/screens/WallpaperSetupScreen";
@@ -123,8 +123,8 @@ function App() {
       setGeneratedWallpaperUrl(imageUrl);
       return true;
     } catch (error) {
-      console.error("바탕화면 생성 오류:", error);
-      alert("바탕화면 생성에 실패했습니다.");
+      console.error("배경화면 생성 오류:", error);
+      alert("배경화면 생성에 실패했습니다.");
       return false;
     } finally {
       setIsGeneratingWallpaper(false);
@@ -160,7 +160,7 @@ function App() {
         <h1 className="text-xl font-bold sm:text-2xl">HAN BI SCHEDULE</h1>
       </header>
 
-      <main className="flex-1 w-full">
+      <main className="w-full flex-1">
         {loading ? (
           <div className="flex min-h-screen w-full flex-col items-center justify-center gap-4 py-12">
             <img

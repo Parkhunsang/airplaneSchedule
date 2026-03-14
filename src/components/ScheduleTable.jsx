@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 
 function DeleteIcon() {
   return (
@@ -30,7 +30,7 @@ const getDestinationLabel = (schedule) =>
 function ScheduleTable({ schedules, onDelete }) {
   if (schedules.length === 0) {
     return (
-      <div className="mb-0 rounded-none bg-white p-8 text-center text-gray-600 border border-gray-200">
+      <div className="mb-0 rounded-none border border-gray-200 bg-white p-8 text-center text-gray-600">
         <p className="mb-2 text-base font-medium sm:text-lg">
           아직 등록된 비행편이 없습니다.
         </p>
@@ -77,11 +77,10 @@ function ScheduleTable({ schedules, onDelete }) {
 
               return (
                 <React.Fragment key={schedule.id}>
-                  {/* 모바일 뷰 */}
                   <tr className="border-b border-gray-200 sm:hidden">
                     <td className="p-0" colSpan={6}>
                       <div className="flex flex-col border border-gray-200 bg-white">
-                        <div className="p-4 space-y-3">
+                        <div className="space-y-3 p-4">
                           <div className="flex items-center gap-6 border-b border-gray-100 pb-2 text-xs text-gray-900">
                             <p className="font-light">날짜</p>
                             <p className="text-sm font-light">
@@ -125,7 +124,6 @@ function ScheduleTable({ schedules, onDelete }) {
                             </div>
                           </div>
                         </div>
-                        {/* 모바일 버튼: py-5로 높이를 키움 */}
                         <button
                           onClick={() => onDelete(schedule.id)}
                           className="flex w-full items-center justify-center gap-1 rounded-none bg-red-600 py-5 font-regular text-white transition-all hover:bg-red-700 active:bg-red-800"
@@ -136,8 +134,7 @@ function ScheduleTable({ schedules, onDelete }) {
                     </td>
                   </tr>
 
-                  {/* 데스크톱 뷰: h-[68px]로 높이를 약 12px 늘림 */}
-                  <tr className="hidden border-b border-gray-200 text-sm md:text-base sm:table-row bg-white hover:bg-gray-50 transition-colors h-[68px]">
+                  <tr className="hidden h-[68px] border-b border-gray-200 bg-white text-sm transition-colors hover:bg-gray-50 sm:table-row md:text-base">
                     <td className="px-3 py-2 sm:px-4 md:px-6">
                       {schedule.date}
                     </td>
@@ -157,11 +154,10 @@ function ScheduleTable({ schedules, onDelete }) {
                         {destinationLabel}
                       </span>
                     </td>
-                    <td className="p-0 h-full text-center">
-                      {/* min-h-[68px]를 적용해 셀 높이를 꽉 채움 */}
+                    <td className="h-full p-0 text-center">
                       <button
                         onClick={() => onDelete(schedule.id)}
-                        className="flex h-full w-full min-h-[68px] items-center justify-center gap-2 rounded-none bg-red-600 px-4 text-base font-bold text-white transition-all hover:bg-red-700 active:bg-red-800 active:scale-[0.98] sm:min-w-[110px]"
+                        className="flex h-full w-full min-h-[68px] items-center justify-center gap-2 rounded-none bg-red-600 px-4 text-base font-bold text-white transition-all hover:bg-red-700 active:scale-[0.98] active:bg-red-800 sm:min-w-[110px]"
                       >
                         <DeleteIcon />
                         <span>삭제</span>
