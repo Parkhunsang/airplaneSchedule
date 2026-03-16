@@ -18,9 +18,9 @@ function ScheduleEntryScreen({
             type="button"
             onClick={onNext}
             disabled={schedules.length === 0}
-            className="inline-flex  items-center justify-center gap-2 rounded-full bg-purple-500 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:text-base"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1565C0] pl-5 pr-5 py-3 text-sm font-semibold text-white  disabled:cursor-not-allowed disabled:bg-gray-300 sm:text-base"
           >
-            <span>다음</span>
+            <span className="">다음</span>
             <span aria-hidden="true">→</span>
           </button>
         </div>

@@ -192,7 +192,7 @@ function App() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
-      <header className="mb-10 w-full bg-purple-300 text-white shadow-lg">
+      <header className="mb-10 w-full bg-[#1565C0] text-white shadow-lg">
         <div className="flex h-12 w-full max-w-3xl items-center px-3">
           <h1 className="text-xl font-bold sm:text-2xl">HAN BI SCHEDULE</h1>
         </div>
@@ -220,7 +220,7 @@ function App() {
                     <span
                       key={step}
                       className={`h-2.5 w-2.5 rounded-full transition ${
-                        step === currentScreen ? "bg-purple-500" : "bg-gray-300"
+                        step === currentScreen ? "bg-[#1565C0]" : "bg-gray-300"
                       }`}
                     />
                   ))}

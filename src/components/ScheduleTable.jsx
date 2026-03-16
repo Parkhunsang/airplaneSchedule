@@ -47,7 +47,7 @@ function ScheduleTable({ schedules, onDelete }) {
           <div className="overflow-x-auto">
             <table className="w-full border-separate border-spacing-x-0 border-spacing-y-[6px] text-sm md:text-base">
               <thead className="hidden sm:table-header-group">
-                <tr className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">
+                <tr className="bg-[#1565C0] text-white">
                   <th className="px-3 py-2 text-left font-semibold sm:px-4 sm:py-3 md:px-6">
                     날짜
                   </th>
@@ -98,7 +98,7 @@ function ScheduleTable({ schedules, onDelete }) {
                                   <p className="font-semibold text-gray-500">
                                     편명
                                   </p>
-                                  <span className="inline-flex items-center justify-center rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-800">
+                                  <span className="inline-flex items-center justify-center rounded-full bg-[#F3E8FF] px-3 py-1 font-medium text-[#7E22CE]">
                                     {aircraftLabel}
                                   </span>
                                 </div>
@@ -116,7 +116,7 @@ function ScheduleTable({ schedules, onDelete }) {
                                   <p className="font-semibold text-gray-500">
                                     도착지
                                   </p>
-                                  <span className="inline-flex items-center justify-center rounded-full bg-purple-100 px-3 py-1 font-medium text-purple-800">
+                                  <span className="inline-flex items-center justify-center rounded-full bg-[#CCFBF1] px-3 py-1 font-medium text-[#0F766E]">
                                     {destinationLabel}
                                   </span>
                                 </div>
@@ -124,7 +124,7 @@ function ScheduleTable({ schedules, onDelete }) {
                             </div>
                             <button
                               onClick={() => onDelete(schedule.id)}
-                              className="flex w-full items-center justify-center gap-1 bg-red-300 py-4 h-7 text-white transition-all hover:bg-red-700 active:bg-red-800"
+                              className="flex w-full items-center justify-center gap-1 bg-[#E53935] py-4 h-7 text-white transition-all hover:bg-[#E53935] active:bg-red-700"
                             >
                               <DeleteIcon />
                             </button>
@@ -143,22 +143,21 @@ function ScheduleTable({ schedules, onDelete }) {
                           {schedule.arrivalTime}
                         </td>
                         <td className="px-3 py-2 sm:px-4 md:px-6">
-                          <span className="inline-flex min-w-[80px] items-center justify-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 sm:text-sm">
+                          <span className="inline-flex min-w-[80px] items-center justify-center rounded-full bg-[#F3E8FF] px-3 py-1 text-xs font-medium text-[#7E22CE] sm:text-sm">
                             {aircraftLabel}
                           </span>
                         </td>
                         <td className="px-3 py-2 sm:px-4 md:px-6">
-                          <span className="inline-flex min-w-[240px] items-center justify-center rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 sm:text-sm">
+                          <span className="inline-flex min-w-[240px] items-center justify-center rounded-full bg-[#CCFBF1] px-3 py-1 text-xs font-medium text-[#0F766E] sm:text-sm">
                             {destinationLabel}
                           </span>
                         </td>
                         <td className="h-full p-0 text-center">
                           <button
                             onClick={() => onDelete(schedule.id)}
-                            className="flex h-full w-full min-h-[68px] items-center justify-center gap-2 bg-red-600 px-4 text-base font-bold text-white transition-all hover:bg-red-700 active:scale-[0.98] active:bg-red-800 sm:min-w-[110px]"
+                            className="flex h-full w-full min-h-[68px] items-center justify-center gap-2 bg-red-600 px-4 text-base font-bold text-white transition-all hover:bg-red-700 active:bg-red-800 sm:min-w-[110px] rounded-2xl"
                           >
                             <DeleteIcon />
-                            <span>삭제</span>
                           </button>
                         </td>
                       </tr>

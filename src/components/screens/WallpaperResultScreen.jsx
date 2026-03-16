@@ -30,7 +30,7 @@ function WallpaperResultScreen({
                     />
                   </div>
 
-                  <div className="mt-4 bg-white p-4">
+                  <div className="mt-4 bg-white p-4 rounded-lg">
                     <p className="font-semibold text-slate-800">Preview</p>
                     <p className="mt-1 break-words text-sm leading-6 text-slate-600">
                       선택한 사진과 일정 카드가 함께 들어간 배경화면 결과를
@@ -80,4 +80,3 @@ function WallpaperResultScreen({
 }
 
 export default WallpaperResultScreen;
-
