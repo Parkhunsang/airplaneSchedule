@@ -3,6 +3,7 @@ import loadingImage from "./assets/loading.jpg";
 import ScheduleEntryScreen from "./components/screens/ScheduleEntryScreen";
 import WallpaperSetupScreen from "./components/screens/WallpaperSetupScreen";
 import WallpaperResultScreen from "./components/screens/WallpaperResultScreen";
+import { DEFAULT_EVENT_TYPE_COLORS } from "./constants/eventTypes";
 import {
   subscribeSchedules,
   addSchedule,
@@ -15,6 +16,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [currentScreen, setCurrentScreen] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState("#6d28d9");
+  const [eventTypeColors, setEventTypeColors] = useState(
+    DEFAULT_EVENT_TYPE_COLORS,
+  );
   const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState("");
   const [generatedWallpaperUrl, setGeneratedWallpaperUrl] = useState("");
   const [isGeneratingWallpaper, setIsGeneratingWallpaper] = useState(false);
@@ -83,6 +87,14 @@ function App() {
     setGeneratedWallpaperUrl("");
   };
 
+  const handleEventTypeColorChange = (eventType, nextColor) => {
+    setEventTypeColors((prev) => ({
+      ...prev,
+      [eventType]: nextColor,
+    }));
+    setGeneratedWallpaperUrl("");
+  };
+
   const handleThumbnailSelect = (file) => {
     if (!file) {
       setGeneratedWallpaperUrl("");
@@ -115,6 +127,7 @@ function App() {
 
       const imageUrl = await generateWallpaperImage({
         backgroundColor: selectedBgColor,
+        eventTypeColors,
         thumbnailImageUrl: thumbnailPreviewUrl,
         schedules,
         referenceDate,
@@ -171,6 +184,8 @@ function App() {
         <WallpaperSetupScreen
           selectedBgColor={selectedBgColor}
           onBgColorChange={handleBgColorChange}
+          eventTypeColors={eventTypeColors}
+          onEventTypeColorChange={handleEventTypeColorChange}
           thumbnailPreviewUrl={thumbnailPreviewUrl}
           onThumbnailSelect={handleThumbnailSelect}
           isGenerating={isGeneratingWallpaper}

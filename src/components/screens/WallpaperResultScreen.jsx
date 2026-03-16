@@ -51,7 +51,7 @@ function WallpaperResultScreen({
                 type="button"
                 onClick={onDownload}
                 disabled={!generatedWallpaperUrl}
-                className="inline-flex w-full items-center justify-center rounded-full bg-purple-500 px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#1E6DEB] hover:bg-[#1E6DEB] active:bg-[#1565C0] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto"
               >
                 이미지 다운로드
               </button>

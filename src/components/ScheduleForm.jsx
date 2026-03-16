@@ -1,10 +1,12 @@
 ﻿import React, { useState } from "react";
 
 import DESTINATIONS from "../constants/destinations";
+import { EVENT_TYPE_OPTIONS } from "../constants/eventTypes";
 
 function ScheduleForm({ onAddSchedule }) {
   const [formData, setFormData] = useState({
     date: "",
+    eventType: "flight",
     departureTime: "",
     arrivalTime: "",
     aircraft: "",
@@ -22,11 +24,18 @@ function ScheduleForm({ onAddSchedule }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const isFlightEvent = formData.eventType === "flight";
+    const requiresTimeRange =
+      formData.eventType === "flight" ||
+      formData.eventType === "standby" ||
+      formData.eventType === "training";
+
     if (
       !formData.date ||
-      !formData.departureTime ||
-      !formData.aircraft ||
-      !formData.destination
+      !formData.eventType ||
+      (requiresTimeRange &&
+        (!formData.departureTime || !formData.arrivalTime)) ||
+      (isFlightEvent && (!formData.aircraft || !formData.destination))
     ) {
       alert("모든 필수 항목을 입력해주세요!");
       return;
@@ -35,10 +44,11 @@ function ScheduleForm({ onAddSchedule }) {
     try {
       await onAddSchedule({
         date: formData.date,
-        departureTime: formData.departureTime,
-        arrivalTime: formData.arrivalTime || "-",
-        aircraft: formData.aircraft,
-        destination: formData.destination,
+        eventType: formData.eventType,
+        departureTime: requiresTimeRange ? formData.departureTime : "-",
+        arrivalTime: requiresTimeRange ? formData.arrivalTime : "-",
+        aircraft: isFlightEvent ? formData.aircraft : formData.eventType,
+        destination: isFlightEvent ? formData.destination : formData.eventType,
       });
     } catch (error) {
       return;
@@ -46,6 +56,7 @@ function ScheduleForm({ onAddSchedule }) {
 
     setFormData({
       date: "",
+      eventType: "flight",
       departureTime: "",
       arrivalTime: "",
       aircraft: "",
@@ -74,8 +85,30 @@ function ScheduleForm({ onAddSchedule }) {
               value={formData.date}
               onChange={handleChange}
               required
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-purple-500 focus:outline-none"
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none"
             />
+          </div>
+
+          <div className="flex flex-1 flex-col">
+            <label
+              htmlFor="eventType"
+              className="mb-2 font-semibold text-gray-700"
+            >
+              이벤트 타입 *
+            </label>
+            <select
+              id="eventType"
+              name="eventType"
+              value={formData.eventType}
+              onChange={handleChange}
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base font-medium transition focus:border-[#1565C0] focus:outline-none"
+            >
+              {EVENT_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex flex-1 flex-col">
@@ -83,7 +116,12 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="departureTime"
               className="mb-2 font-semibold text-gray-700"
             >
-              출발 시간 *
+              시작 시간
+              {formData.eventType === "flight" ||
+              formData.eventType === "standby" ||
+              formData.eventType === "training"
+                ? " *"
+                : ""}
             </label>
             <input
               type="time"
@@ -91,8 +129,13 @@ function ScheduleForm({ onAddSchedule }) {
               name="departureTime"
               value={formData.departureTime}
               onChange={handleChange}
-              required
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-purple-500 focus:outline-none"
+              required={
+                formData.eventType === "flight" ||
+                formData.eventType === "standby" ||
+                formData.eventType === "training"
+              }
+              disabled={false}
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
             />
           </div>
 
@@ -101,7 +144,12 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="arrivalTime"
               className="mb-2 font-semibold text-gray-700"
             >
-              도착 시간
+              종료 시간
+              {formData.eventType === "flight" ||
+              formData.eventType === "standby" ||
+              formData.eventType === "training"
+                ? " *"
+                : ""}
             </label>
             <input
               type="time"
@@ -109,7 +157,13 @@ function ScheduleForm({ onAddSchedule }) {
               name="arrivalTime"
               value={formData.arrivalTime}
               onChange={handleChange}
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-purple-500 focus:outline-none"
+              required={
+                formData.eventType === "flight" ||
+                formData.eventType === "standby" ||
+                formData.eventType === "training"
+              }
+              disabled={false}
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
             />
           </div>
 
@@ -118,7 +172,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="aircraft"
               className="mb-2 font-semibold text-gray-700"
             >
-              비행기 편명 *
+              비행기 편명 {formData.eventType === "flight" ? "*" : ""}
             </label>
             <input
               type="text"
@@ -126,9 +180,10 @@ function ScheduleForm({ onAddSchedule }) {
               name="aircraft"
               value={formData.aircraft}
               onChange={handleChange}
-              placeholder="예:HX080"
-              required
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-purple-500 focus:outline-none"
+              placeholder="예: HX080"
+              required={formData.eventType === "flight"}
+              disabled={formData.eventType !== "flight"}
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
             />
           </div>
 
@@ -137,15 +192,16 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="destination"
               className="mb-2 font-semibold text-gray-700"
             >
-              도착지 *
+              도착지 {formData.eventType === "flight" ? "*" : ""}
             </label>
             <select
               id="destination"
               name="destination"
               value={formData.destination}
               onChange={handleChange}
-              required
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base font-medium transition focus:border-purple-500 focus:outline-none"
+              required={formData.eventType === "flight"}
+              disabled={formData.eventType !== "flight"}
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base font-medium transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
             >
               <option value="">도착지를 선택하세요...</option>
               {Object.entries(DESTINATIONS).map(([country, cities]) => (
@@ -165,7 +221,7 @@ function ScheduleForm({ onAddSchedule }) {
             className="col-span-1 inline-flex min-h-[48px] items-center justify-center gap-2 self-end rounded-2xl bg-[#1E6DEB] px-6 py-3 text-base font-semibold text-white shadow-lg transition-all hover:bg-[#1E6DEB] active:bg-[#1565C0] sm:col-span-2 lg:col-span-1"
           >
             <span className="text-lg leading-none">+</span>
-            <span>비행편 추가</span>
+            <span>일정 추가</span>
           </button>
         </form>
       </div>

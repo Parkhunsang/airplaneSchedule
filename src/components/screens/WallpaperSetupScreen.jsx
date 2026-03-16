@@ -1,5 +1,10 @@
 import React from "react";
 import WallpaperBuilder from "../WallpaperBuilder";
+import {
+  BLOCK_COLOR_OPTIONS,
+  DEFAULT_EVENT_TYPE_COLORS,
+  EVENT_TYPE_LABELS,
+} from "../../constants/eventTypes";
 
 const BG_PALETTE = [
   "#0f172a",
@@ -13,12 +18,13 @@ const BG_PALETTE = [
   "#0f766e",
   "#22c55e",
   "#eab308",
-  "#111827",
 ];
 
 function WallpaperSetupScreen({
   selectedBgColor,
   onBgColorChange,
+  eventTypeColors,
+  onEventTypeColorChange,
   thumbnailPreviewUrl,
   onThumbnailSelect,
   isGenerating,
@@ -39,7 +45,7 @@ function WallpaperSetupScreen({
       <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col gap-5">
         <WallpaperBuilder
           title="배경화면 설정"
-          subtitle="색상을 고르고 사진을 올린 뒤 배경화면을 생성하세요."
+          subtitle="배경 색상, 이벤트 블럭 색상, 사진을 선택한 뒤 배경화면을 생성하세요."
         >
           <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-5">
             <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
@@ -76,12 +82,12 @@ function WallpaperSetupScreen({
                   value={selectedBgColor}
                   onChange={handleCustomColorChange}
                   className="h-10 w-14 cursor-pointer rounded-md border border-gray-300 bg-white p-1"
-                  aria-label="사용자 지정 색상 선택"
+                  aria-label="사용자 지정 배경 색상 선택"
                 />
               </div>
 
               <div className="mt-4 flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
-                <span className="text-sm text-gray-700">선택한 색상</span>
+                <span className="text-sm text-gray-700">선택한 배경 색상</span>
                 <span
                   className="inline-flex w-fit max-w-full break-all rounded-full px-3 py-1 text-xs text-white"
                   style={{ backgroundColor: selectedBgColor }}
@@ -93,17 +99,53 @@ function WallpaperSetupScreen({
 
             <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
               <p className="mb-3 text-sm font-medium text-gray-700 sm:text-base">
-                Step 2. 사진을 선택하세요
+                Step 2. 이벤트 블럭 색상을 설정하세요
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {BLOCK_COLOR_OPTIONS.map(({ value, label }) => (
+                  <label
+                    key={value}
+                    className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3"
+                  >
+                    <span
+                      className="h-5 w-5 shrink-0 rounded-full border border-white shadow-sm"
+                      style={{
+                        backgroundColor:
+                          eventTypeColors[value] ??
+                          DEFAULT_EVENT_TYPE_COLORS[value],
+                      }}
+                    />
+                    <span className="min-w-[72px] text-sm font-medium text-gray-700">
+                      {label}
+                    </span>
+                    <input
+                      type="color"
+                      value={
+                        eventTypeColors[value] ?? DEFAULT_EVENT_TYPE_COLORS[value]
+                      }
+                      onChange={(e) =>
+                        onEventTypeColorChange(value, e.target.value)
+                      }
+                      className="ml-auto h-10 w-14 cursor-pointer rounded-md border border-gray-300 bg-white p-1"
+                      aria-label={`${EVENT_TYPE_LABELS[value]} color`}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
+              <p className="mb-3 text-sm font-medium text-gray-700 sm:text-base">
+                Step 3. 사진을 선택하세요
               </p>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleThumbnailFileChange}
-                className="block w-full min-w-0 text-sm file:mb-3 file:mr-0 file:block file:w-full file:rounded-full file:border-0 file:bg-purple-100 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-purple-700 hover:file:bg-purple-200 sm:file:mb-0 sm:file:mr-4 sm:file:inline-block sm:file:w-auto"
+                className="block w-full min-w-0 text-sm file:mb-3 file:mr-0 file:block file:w-full file:rounded-full file:border-0 file:bg-[#93C5FD] file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-[#60A5FA] sm:file:mb-0 sm:file:mr-4 sm:file:inline-block sm:file:w-auto"
               />
               <p className="mt-2 break-words text-xs leading-5 text-gray-500">
-                갤러리에서 사진을 선택해주세요. 정사각형 또는 세로 비율 이미지를
-                권장합니다.
+                갤러리에서 사진을 선택해주세요. 정사각형 또는 세로 비율 이미지를 권장합니다.
               </p>
               {thumbnailPreviewUrl ? (
                 <div className="mt-4 min-w-0">
@@ -134,7 +176,7 @@ function WallpaperSetupScreen({
             type="button"
             onClick={onNext}
             disabled={!thumbnailPreviewUrl || isGenerating}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-purple-500 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto sm:text-base"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1E6DEB] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto sm:text-base"
           >
             <span>{isGenerating ? "생성 중..." : "다음"}</span>
             <span aria-hidden="true">→</span>
