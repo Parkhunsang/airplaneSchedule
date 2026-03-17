@@ -4,8 +4,8 @@ import WallpaperBuilder from "../WallpaperBuilder";
 function WallpaperResultScreen({
   generatedWallpaperUrl,
   onPrev,
+  onGoHome,
   onDownload,
-  onRestart,
 }) {
   return (
     <section className="min-w-full min-w-0 flex-none">
@@ -17,7 +17,7 @@ function WallpaperResultScreen({
           <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-5">
             <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
               <p className="mb-3 text-sm font-medium text-gray-700 sm:text-base">
-                Step 3. 결과
+                Step 4. 결과
               </p>
 
               {generatedWallpaperUrl ? (
@@ -57,10 +57,10 @@ function WallpaperResultScreen({
               </button>
               <button
                 type="button"
-                onClick={onRestart}
+                onClick={onPrev}
                 className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 sm:w-auto"
               >
-                다시 만들기
+                이전
               </button>
             </div>
           </div>
@@ -68,10 +68,10 @@ function WallpaperResultScreen({
         <div className="flex min-w-0 flex-col gap-3 pb-6 sm:flex-row sm:justify-start">
           <button
             type="button"
-            onClick={onPrev}
+            onClick={onGoHome}
             className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-700 sm:w-auto sm:text-base"
           >
-            이전
+            처음으로
           </button>
         </div>
       </div>

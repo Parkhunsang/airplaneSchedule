@@ -1,8 +1,4 @@
-import {
-  DAY_LABELS,
-  MONTH_LABELS,
-  scale,
-} from "./constants.js";
+import { DAY_LABELS, MONTH_LABELS, scale } from "./constants.js";
 import { withAlpha } from "./color.js";
 import {
   addDays,
@@ -13,11 +9,11 @@ import {
   parseDateParts,
   toDateKey,
 } from "./date.js";
+import { fillRectWithShadow, fillRoundedRect } from "./canvas.js";
 import {
-  fillRectWithShadow,
-  fillRoundedRect,
-} from "./canvas.js";
-import { DEFAULT_EVENT_TYPE_COLORS, EVENT_TYPE_LABELS } from "../../constants/eventTypes.js";
+  DEFAULT_EVENT_TYPE_COLORS,
+  EVENT_TYPE_LABELS,
+} from "../../constants/eventTypes.js";
 
 const getAirportCode = (destination = "") => {
   const codeMatch = destination.match(/\(([A-Z/]+)\)/);
@@ -179,6 +175,7 @@ const drawFlightChip = ({ ctx, x, y, width, schedule }) => {
     withAlpha("#000000", 0.16),
   );
 
+  // 캔버스 텍스트는 ctx.font 값으로 직접 그려지므로, 여기서 최종 이미지의 폰트가 결정됩니다.
   ctx.fillStyle = "#ffffff";
   ctx.font = `700 ${scale(8)}px Alatsi, sans-serif`;
   ctx.fillText(
@@ -189,14 +186,14 @@ const drawFlightChip = ({ ctx, x, y, width, schedule }) => {
     chipCenterY,
   );
 
-  ctx.font = `700 ${scale(10)}px Belgrano, serif`;
+  ctx.font = `800 ${scale(10)}px Belgrano, serif`;
   ctx.fillText(
     getEventLabel(schedule),
     x + width / 2,
     chipY + chipHeight + scale(7),
   );
 
-  ctx.font = `500 ${scale(5)}px Ysabeau Infant, sans-serif`;
+  ctx.font = `500 ${scale(7)}px Ysabeau Infant, sans-serif`;
   ctx.fillText(
     formatTimeRange(schedule),
     x + width / 2,
@@ -255,6 +252,7 @@ const drawSpanningFlight = ({ ctx, startRect, endRect, schedule }) => {
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
+  // 자정을 넘기는 일정도 일반 일정 칩과 같은 폰트 설정을 사용합니다.
   ctx.font = `700 ${scale(8)}px Alatsi, sans-serif`;
   ctx.fillText(schedule.aircraft || "FLT", chipCenterX, chipCenterY);
 
@@ -305,8 +303,9 @@ export const drawCalendar = ({
     const weekendColor =
       index === 0 ? "#d72323" : index === 6 ? "#0a56ff" : "#1b1b1b";
 
+    // 요일 라벨과 하단 요약 문구도 Tailwind가 아니라 캔버스 폰트 설정으로 그려집니다.
     ctx.fillStyle = weekendColor;
-    ctx.font = `${scale(12)}px Belgrano, serif`;
+    ctx.font = `600 ${scale(12)}px Belgrano, serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillText(label, x, weekdayTop);
@@ -399,13 +398,13 @@ export const drawCalendar = ({
     0,
   );
 
-  ctx.fillStyle = withAlpha("#2b5170", 0.68);
-  ctx.font = "600 24px Ysabeau Infant, sans-serif";
+  ctx.fillStyle = withAlpha("#000000", 0.8);
+  ctx.font = `600 ${scale(12)}px Ysabeau Infant, sans-serif`;
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
   ctx.fillText(
-    `${MONTH_LABELS[month]} route plan · total ${formatTotalDuration(totalFlightMinutes)}`,
+    `${MONTH_LABELS[month]} total ${formatTotalDuration(totalFlightMinutes)}`,
     56,
-    2580,
+    2600,
   );
 };

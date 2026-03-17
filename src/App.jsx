@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import loadingImage from "./assets/loading.jpg";
 import ScheduleEntryScreen from "./features/schedule/components/screens/ScheduleEntryScreen";
 import WallpaperSetupScreen from "./features/wallpaper/components/screens/WallpaperSetupScreen";
@@ -19,6 +19,8 @@ function App() {
   const [eventTypeColors, setEventTypeColors] = useState(
     DEFAULT_EVENT_TYPE_COLORS,
   );
+  const [thumbnailFileName, setThumbnailFileName] = useState("");
+  const [thumbnailDimensions, setThumbnailDimensions] = useState(null);
   const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState("");
   const [generatedWallpaperUrl, setGeneratedWallpaperUrl] = useState("");
   const [isGeneratingWallpaper, setIsGeneratingWallpaper] = useState(false);
@@ -98,11 +100,27 @@ function App() {
   const handleThumbnailSelect = (file) => {
     if (!file) {
       setGeneratedWallpaperUrl("");
+      setThumbnailFileName("");
+      setThumbnailDimensions(null);
       setThumbnailPreviewUrl("");
       return;
     }
 
     const nextPreviewUrl = URL.createObjectURL(file);
+    setThumbnailFileName(file.name);
+    const image = new Image();
+    image.onload = () => {
+      setThumbnailDimensions({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      });
+      URL.revokeObjectURL(image.src);
+    };
+    image.onerror = () => {
+      setThumbnailDimensions(null);
+      URL.revokeObjectURL(image.src);
+    };
+    image.src = URL.createObjectURL(file);
     setThumbnailPreviewUrl((prev) => {
       if (prev) {
         URL.revokeObjectURL(prev);
@@ -162,11 +180,6 @@ function App() {
     link.remove();
   };
 
-  const handleResetFlow = () => {
-    setCurrentScreen(1);
-    setGeneratedWallpaperUrl("");
-  };
-
   const renderCurrentScreen = () => {
     if (currentScreen === 0) {
       return (
@@ -186,6 +199,8 @@ function App() {
           onBgColorChange={handleBgColorChange}
           eventTypeColors={eventTypeColors}
           onEventTypeColorChange={handleEventTypeColorChange}
+          thumbnailFileName={thumbnailFileName}
+          thumbnailDimensions={thumbnailDimensions}
           thumbnailPreviewUrl={thumbnailPreviewUrl}
           onThumbnailSelect={handleThumbnailSelect}
           isGenerating={isGeneratingWallpaper}
@@ -199,15 +214,15 @@ function App() {
       <WallpaperResultScreen
         generatedWallpaperUrl={generatedWallpaperUrl}
         onPrev={() => setCurrentScreen(1)}
+        onGoHome={() => setCurrentScreen(0)}
         onDownload={handleDownloadWallpaper}
-        onRestart={handleResetFlow}
       />
     );
   };
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
-      <header className="mb-10 w-full bg-[#1565C0] text-white shadow-lg">
+      <header className="mb-3 w-full bg-[#1565C0] text-white shadow-lg">
         <div className="flex h-12 w-full max-w-3xl items-center px-3">
           <h1 className="text-xl font-bold sm:text-2xl">HAN BI SCHEDULE</h1>
         </div>

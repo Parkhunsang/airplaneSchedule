@@ -1,7 +1,29 @@
-import { drawImageCover, fillRoundedRect, loadImage, strokeRoundedRect } from "./wallpaper/canvas.js";
+import {
+  drawImageCover,
+  fillRoundedRect,
+  loadImage,
+  strokeRoundedRect,
+} from "./wallpaper/canvas.js";
 import { withAlpha } from "./wallpaper/color.js";
 import { drawCalendar } from "./wallpaper/calendar.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, MONTH_LABELS, scale } from "./wallpaper/constants.js";
+import {
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  MONTH_LABELS,
+  scale,
+} from "./wallpaper/constants.js";
+
+const loadWallpaperFonts = async () => {
+  if (!document.fonts?.load) {
+    return;
+  }
+
+  await Promise.all([
+    document.fonts.load('700 12px "Belgrano"'),
+    document.fonts.load('400 12px "Brawler"'),
+    document.fonts.load('500 12px "Ysabeau Infant"'),
+  ]);
+};
 
 export const generateWallpaperImage = async ({
   backgroundColor = "#6d28d9",
@@ -20,6 +42,8 @@ export const generateWallpaperImage = async ({
     throw new Error("Canvas context is not available.");
   }
 
+  await loadWallpaperFonts();
+
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   const accentColor = backgroundColor;
@@ -31,8 +55,8 @@ export const generateWallpaperImage = async ({
 
   const photoX = scale(17);
   const photoY = scale(17);
-  const photoWidth = scale(356);
-  const photoHeight = scale(285);
+  const photoWidth = scale(360);
+  const photoHeight = scale(288);
   const photoRadius = scale(20);
 
   fillRoundedRect(
@@ -95,6 +119,7 @@ export const generateWallpaperImage = async ({
   ctx.fillStyle = accentColor;
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
+  // 상단 월/제목 텍스트의 폰트도 여기서 캔버스 font 문자열로 직접 지정합니다.
   ctx.font = `700 ${scale(14)}px Belgrano, serif`;
   ctx.fillText(month, scale(33), scale(220));
   ctx.font = `700 ${scale(26)}px Belgrano, serif`;

@@ -25,6 +25,8 @@ function WallpaperSetupScreen({
   onBgColorChange,
   eventTypeColors,
   onEventTypeColorChange,
+  thumbnailFileName,
+  thumbnailDimensions,
   thumbnailPreviewUrl,
   onThumbnailSelect,
   isGenerating,
@@ -121,7 +123,8 @@ function WallpaperSetupScreen({
                     <input
                       type="color"
                       value={
-                        eventTypeColors[value] ?? DEFAULT_EVENT_TYPE_COLORS[value]
+                        eventTypeColors[value] ??
+                        DEFAULT_EVENT_TYPE_COLORS[value]
                       }
                       onChange={(e) =>
                         onEventTypeColorChange(value, e.target.value)
@@ -144,8 +147,20 @@ function WallpaperSetupScreen({
                 onChange={handleThumbnailFileChange}
                 className="block w-full min-w-0 text-sm file:mb-3 file:mr-0 file:block file:w-full file:rounded-full file:border-0 file:bg-[#93C5FD] file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-[#60A5FA] sm:file:mb-0 sm:file:mr-4 sm:file:inline-block sm:file:w-auto"
               />
+              {thumbnailFileName ? (
+                <p className="mt-2 break-words text-xs leading-5 text-gray-600">
+                  선택된 파일: {thumbnailFileName}
+                </p>
+              ) : null}
+              {thumbnailDimensions ? (
+                <p className="mt-1 text-xs leading-5 text-gray-600">
+                  이미지 크기: {thumbnailDimensions.width} x{" "}
+                  {thumbnailDimensions.height}
+                </p>
+              ) : null}
               <p className="mt-2 break-words text-xs leading-5 text-gray-500">
-                갤러리에서 사진을 선택해주세요. 정사각형 또는 세로 비율 이미지를 권장합니다.
+                갤러리에서 사진을 선택해주세요. <br></br>권장 크기는 가로:
+                360px, 세로: 288px입니다.
               </p>
               {thumbnailPreviewUrl ? (
                 <div className="mt-4 min-w-0">

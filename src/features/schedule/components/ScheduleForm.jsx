@@ -94,7 +94,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="eventType"
               className="mb-2 font-semibold text-gray-700"
             >
-              이벤트 타입 *
+              근무 종류 *
             </label>
             <select
               id="eventType"
@@ -204,9 +204,12 @@ function ScheduleForm({ onAddSchedule }) {
               className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base font-medium transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
             >
               <option value="">도착지를 선택하세요...</option>
-              {Object.entries(DESTINATIONS).map(([country, cities]) => (
-                <optgroup key={country} label={country}>
-                  {cities.map((city) => (
+              {Object.entries(DESTINATIONS).map(([country, destinationGroup]) => (
+                <optgroup
+                  key={country}
+                  label={`${destinationGroup.flag} ${country}`}
+                >
+                  {destinationGroup.cities.map((city) => (
                     <option key={city} value={city}>
                       {city}
                     </option>
