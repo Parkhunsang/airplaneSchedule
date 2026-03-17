@@ -11,10 +11,46 @@ import {
 } from "./features/schedule/services/scheduleService";
 import { generateWallpaperImage } from "./features/wallpaper/utils/wallpaperGenerator";
 
+const SORT_OPTIONS = {
+  DATE_ASC: "date_asc",
+  DATE_DESC: "date_desc",
+  FLIGHT_DESC: "flight_desc",
+  STANDBY_DESC: "standby_desc",
+  TRAINING_DESC: "training_desc",
+};
+
+const compareByDateAsc = (a, b) => a.date.localeCompare(b.date);
+const compareByDateDesc = (a, b) => b.date.localeCompare(a.date);
+
+const getSortedSchedules = (schedules, sortOption) => {
+  const sortedSchedules = [...schedules];
+
+  switch (sortOption) {
+    case SORT_OPTIONS.DATE_DESC:
+      return sortedSchedules.sort(compareByDateDesc);
+    case SORT_OPTIONS.FLIGHT_DESC:
+      return sortedSchedules
+        .filter((schedule) => schedule.eventType === "flight")
+        .sort(compareByDateDesc);
+    case SORT_OPTIONS.STANDBY_DESC:
+      return sortedSchedules
+        .filter((schedule) => schedule.eventType === "standby")
+        .sort(compareByDateDesc);
+    case SORT_OPTIONS.TRAINING_DESC:
+      return sortedSchedules
+        .filter((schedule) => schedule.eventType === "training")
+        .sort(compareByDateDesc);
+    case SORT_OPTIONS.DATE_ASC:
+    default:
+      return sortedSchedules.sort(compareByDateAsc);
+  }
+};
+
 function App() {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentScreen, setCurrentScreen] = useState(0);
+  const [sortOption, setSortOption] = useState(SORT_OPTIONS.DATE_ASC);
   const [selectedBgColor, setSelectedBgColor] = useState("#6d28d9");
   const [eventTypeColors, setEventTypeColors] = useState(
     DEFAULT_EVENT_TYPE_COLORS,
@@ -180,11 +216,15 @@ function App() {
     link.remove();
   };
 
+  const visibleSchedules = getSortedSchedules(schedules, sortOption);
+
   const renderCurrentScreen = () => {
     if (currentScreen === 0) {
       return (
         <ScheduleEntryScreen
-          schedules={schedules}
+          schedules={visibleSchedules}
+          sortOption={sortOption}
+          onChangeSortOption={setSortOption}
           onAddSchedule={handleAddSchedule}
           onDeleteSchedule={handleDeleteSchedule}
           onNext={() => setCurrentScreen(1)}

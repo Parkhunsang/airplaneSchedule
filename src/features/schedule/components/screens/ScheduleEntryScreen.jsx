@@ -4,6 +4,8 @@ import ScheduleTable from "../ScheduleTable";
 
 function ScheduleEntryScreen({
   schedules,
+  sortOption,
+  onChangeSortOption,
   onAddSchedule,
   onDeleteSchedule,
   onNext,
@@ -12,6 +14,22 @@ function ScheduleEntryScreen({
     <section className="min-w-full flex-none">
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
         <ScheduleForm onAddSchedule={onAddSchedule} />
+        <div className="flex justify-end">
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <span>정렬</span>
+            <select
+              value={sortOption}
+              onChange={(e) => onChangeSortOption(e.target.value)}
+              className="min-h-[40px] rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#1565C0] focus:outline-none"
+            >
+              <option value="date_asc">날짜 오름차순</option>
+              <option value="date_desc">날짜 내림차순</option>
+              <option value="flight_desc">Flight</option>
+              <option value="standby_desc">Standby</option>
+              <option value="training_desc">Training</option>
+            </select>
+          </label>
+        </div>
         <ScheduleTable schedules={schedules} onDelete={onDeleteSchedule} />
         <div className="flex justify-end pb-6">
           <button
