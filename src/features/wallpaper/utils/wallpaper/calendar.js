@@ -33,7 +33,21 @@ const formatTimeRange = (schedule) => {
     schedule.arrivalTime && schedule.arrivalTime !== "-"
       ? schedule.arrivalTime
       : null;
-  return arrival ? `${departure}-${arrival}` : departure;
+
+  if (!schedule.isLayover) {
+    return arrival ? `${departure}-${arrival}` : departure;
+  }
+
+  const hongKongDeparture =
+    schedule.hongKongDepartureTime && schedule.hongKongDepartureTime !== "-"
+      ? schedule.hongKongDepartureTime
+      : "--:--";
+  const hongKongArrival =
+    schedule.hongKongArrivalTime && schedule.hongKongArrivalTime !== "-"
+      ? schedule.hongKongArrivalTime
+      : "--:--";
+
+  return `${departure}-${arrival || "--:--"} / ${hongKongDeparture}-${hongKongArrival}`;
 };
 
 const getEventType = (schedule) => schedule.eventType ?? "flight";
@@ -80,6 +94,8 @@ const buildScheduleMap = (schedules, referenceDate, eventTypeColors) => {
   const { year, month } = getMonthGrid(referenceDate);
   const dayMap = new Map();
   const overlayEvents = [];
+  const getDayDiff = (startDate, endDate) =>
+    Math.round((endDate - startDate) / (24 * 60 * 60 * 1000));
 
   const ensureDay = (dateKey) => {
     if (!dayMap.has(dateKey)) {
@@ -94,14 +110,62 @@ const buildScheduleMap = (schedules, referenceDate, eventTypeColors) => {
   schedules.forEach((schedule) => {
     const parsed = parseDateParts(schedule.date);
     if (!parsed) return;
-    if (parsed.year !== year || parsed.month - 1 !== month) return;
 
     const eventType = getEventType(schedule);
     const blockColor = eventTypeColors[eventType] ?? eventTypeColors.off;
     const startDate = new Date(parsed.year, parsed.month - 1, parsed.day);
+    const layoverEndParsed = schedule.isLayover
+      ? parseDateParts(schedule.hongKongDepartureDate)
+      : null;
+    const layoverEndDate = layoverEndParsed
+      ? new Date(
+          layoverEndParsed.year,
+          layoverEndParsed.month - 1,
+          layoverEndParsed.day,
+        )
+      : null;
+    const rangeEndDate = layoverEndDate ?? startDate;
+    const currentMonthStart = new Date(year, month, 1);
+    const currentMonthEnd = new Date(year, month + 1, 0);
+
+    if (rangeEndDate < currentMonthStart || startDate > currentMonthEnd) {
+      return;
+    }
+
+    const colorStartDate =
+      startDate < currentMonthStart ? currentMonthStart : startDate;
+    const colorEndDate =
+      rangeEndDate > currentMonthEnd ? currentMonthEnd : rangeEndDate;
+
+    for (
+      let currentDate = new Date(colorStartDate);
+      currentDate <= colorEndDate;
+      currentDate = addDays(currentDate, 1)
+    ) {
+      ensureDay(toDateKey(currentDate)).baseColor = blockColor;
+    }
+
+    if (parsed.year !== year || parsed.month - 1 !== month) return;
+
+    if (schedule.isLayover && layoverEndDate) {
+      const middleOffset = Math.floor(getDayDiff(startDate, layoverEndDate) / 2);
+      const middleDate = addDays(startDate, middleOffset);
+
+      if (
+        middleDate >= currentMonthStart &&
+        middleDate <= currentMonthEnd
+      ) {
+        ensureDay(toDateKey(middleDate)).items.push({
+          schedule,
+          kind: "flight",
+        });
+      }
+
+      return;
+    }
+
     const startKey = toDateKey(startDate);
     const startDay = ensureDay(startKey);
-    startDay.baseColor = blockColor;
 
     if (eventType === "flight" && isOvernightFlight(schedule)) {
       const arrivalDate = addDays(startDate, 1);
@@ -194,11 +258,14 @@ const drawFlightChip = ({ ctx, x, y, width, schedule }) => {
   );
 
   ctx.font = `500 ${scale(7)}px Ysabeau Infant, sans-serif`;
-  ctx.fillText(
-    formatTimeRange(schedule),
-    x + width / 2,
-    chipY + chipHeight + scale(18),
-  );
+  const timeLines = formatTimeRange(schedule).split(" / ");
+  timeLines.forEach((line, index) => {
+    ctx.fillText(
+      line,
+      x + width / 2,
+      chipY + chipHeight + scale(18) + index * scale(8),
+    );
+  });
 };
 
 const drawSingleDayContent = ({ ctx, x, y, width, item }) => {
@@ -256,19 +323,22 @@ const drawSpanningFlight = ({ ctx, startRect, endRect, schedule }) => {
   ctx.font = `700 ${scale(8)}px Alatsi, sans-serif`;
   ctx.fillText(schedule.aircraft || "FLT", chipCenterX, chipCenterY);
 
-  ctx.font = `700 ${scale(10)}px Belgrano, serif`;
+  ctx.font = `800 ${scale(10)}px Belgrano, serif`;
   ctx.fillText(
     getAirportCode(schedule.destination),
     spanX + spanWidth / 2,
     chipY + chipHeight + scale(7),
   );
 
-  ctx.font = `500 ${scale(5)}px Ysabeau Infant, sans-serif`;
-  ctx.fillText(
-    formatTimeRange(schedule),
-    spanX + spanWidth / 2,
-    chipY + chipHeight + scale(18),
-  );
+  ctx.font = `500 ${scale(7)}px Ysabeau Infant, sans-serif`;
+  const timeLines = formatTimeRange(schedule).split(" / ");
+  timeLines.forEach((line, index) => {
+    ctx.fillText(
+      line,
+      spanX + spanWidth / 2,
+      chipY + chipHeight + scale(18) + index * scale(7),
+    );
+  });
 };
 
 export const drawCalendar = ({

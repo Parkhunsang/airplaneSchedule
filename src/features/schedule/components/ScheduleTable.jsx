@@ -52,6 +52,18 @@ const getDestinationLabel = (schedule) => {
   );
 };
 
+const formatDisplayTime = (time, layoverTime) => {
+  if (!time || time === "-") {
+    return "-";
+  }
+
+  if (!layoverTime || layoverTime === "-") {
+    return time;
+  }
+
+  return `${time} / ${layoverTime}`;
+};
+
 function ScheduleTable({ schedules, onDelete }) {
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
@@ -77,7 +89,7 @@ function ScheduleTable({ schedules, onDelete }) {
                     날짜
                   </th>
                   <th className="px-3 py-2 text-left font-semibold sm:px-4 sm:py-3 md:px-6">
-                    타입
+                    구분
                   </th>
                   <th className="px-3 py-2 text-left font-semibold sm:px-4 sm:py-3 md:px-6">
                     출발
@@ -86,10 +98,10 @@ function ScheduleTable({ schedules, onDelete }) {
                     도착
                   </th>
                   <th className="px-3 py-2 text-left font-semibold sm:px-4 sm:py-3 md:px-6">
-                    라벨
+                    상세
                   </th>
                   <th className="px-3 py-2 text-center font-semibold sm:px-4 sm:py-3 md:px-6">
-                    작업
+                    삭제
                   </th>
                 </tr>
               </thead>
@@ -98,6 +110,14 @@ function ScheduleTable({ schedules, onDelete }) {
                   const eventType = schedule.eventType ?? "flight";
                   const aircraftLabel = getAircraftLabel(schedule);
                   const destinationLabel = getDestinationLabel(schedule);
+                  const departureDisplay = formatDisplayTime(
+                    schedule.departureTime,
+                    schedule.hongKongDepartureTime,
+                  );
+                  const arrivalDisplay = formatDisplayTime(
+                    schedule.arrivalTime,
+                    schedule.hongKongArrivalTime,
+                  );
                   const badgeStyle =
                     EVENT_TYPE_BADGE_STYLES[eventType] ??
                     EVENT_TYPE_BADGE_STYLES.flight;
@@ -127,12 +147,12 @@ function ScheduleTable({ schedules, onDelete }) {
                                     출발
                                   </p>
                                   <p className="text-sm font-normal">
-                                    {schedule.departureTime}
+                                    {departureDisplay}
                                   </p>
                                 </div>
                                 <div className="flex flex-col gap-1">
                                   <p className="font-semibold text-gray-500">
-                                    편명(내용)
+                                    편명
                                   </p>
                                   <span className="inline-flex items-center justify-center rounded-full bg-[#E0F2FE] px-3 py-1 font-medium text-[#0369A1]">
                                     {aircraftLabel}
@@ -145,12 +165,12 @@ function ScheduleTable({ schedules, onDelete }) {
                                     도착
                                   </p>
                                   <p className="text-sm font-normal">
-                                    {schedule.arrivalTime}
+                                    {arrivalDisplay}
                                   </p>
                                 </div>
                                 <div className="flex flex-col gap-1">
                                   <p className="font-semibold text-gray-500">
-                                    도착지(내용)
+                                    목적지
                                   </p>
                                   <span className="inline-flex items-center justify-center rounded-full bg-[#CCFBF1] px-3 py-1 font-medium text-[#0F766E]">
                                     {destinationLabel}
@@ -180,10 +200,10 @@ function ScheduleTable({ schedules, onDelete }) {
                           </span>
                         </td>
                         <td className="px-3 py-2 sm:px-4 md:px-6">
-                          {schedule.departureTime}
+                          {departureDisplay}
                         </td>
                         <td className="px-3 py-2 sm:px-4 md:px-6">
-                          {schedule.arrivalTime}
+                          {arrivalDisplay}
                         </td>
                         <td className="px-3 py-2 sm:px-4 md:px-6">
                           <div className="flex flex-col gap-2">
