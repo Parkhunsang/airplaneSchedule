@@ -193,43 +193,45 @@ function ScheduleForm({ onAddSchedule }) {
             />
           </div>
 
-          <div className="flex flex-1 flex-col">
-            <label
-              htmlFor="hongKongDepartureTime"
-              className="mb-2 font-semibold text-gray-700"
-            >
-              홍콩 출발 시간 {formData.isLayover ? "*" : ""}
-            </label>
-            <input
-              type="time"
-              id="hongKongDepartureTime"
-              name="hongKongDepartureTime"
-              value={formData.hongKongDepartureTime}
-              onChange={handleChange}
-              required={formData.isLayover}
-              disabled={!formData.isLayover}
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
-            />
-          </div>
+          {formData.isLayover ? (
+            <>
+              <div className="flex flex-1 flex-col">
+                <label
+                  htmlFor="hongKongDepartureTime"
+                  className="mb-2 font-semibold text-gray-700"
+                >
+                  홍콩 출발 시간 *
+                </label>
+                <input
+                  type="time"
+                  id="hongKongDepartureTime"
+                  name="hongKongDepartureTime"
+                  value={formData.hongKongDepartureTime}
+                  onChange={handleChange}
+                  required
+                  className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none"
+                />
+              </div>
 
-          <div className="flex flex-1 flex-col">
-            <label
-              htmlFor="hongKongArrivalTime"
-              className="mb-2 font-semibold text-gray-700"
-            >
-              홍콩 도착 시간 {formData.isLayover ? "*" : ""}
-            </label>
-            <input
-              type="time"
-              id="hongKongArrivalTime"
-              name="hongKongArrivalTime"
-              value={formData.hongKongArrivalTime}
-              onChange={handleChange}
-              required={formData.isLayover}
-              disabled={!formData.isLayover}
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
-            />
-          </div>
+              <div className="flex flex-1 flex-col">
+                <label
+                  htmlFor="hongKongArrivalTime"
+                  className="mb-2 font-semibold text-gray-700"
+                >
+                  홍콩 도착 시간 *
+                </label>
+                <input
+                  type="time"
+                  id="hongKongArrivalTime"
+                  name="hongKongArrivalTime"
+                  value={formData.hongKongArrivalTime}
+                  onChange={handleChange}
+                  required
+                  className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none"
+                />
+              </div>
+            </>
+          ) : null}
 
           <div className="flex flex-1 flex-col">
             <label
