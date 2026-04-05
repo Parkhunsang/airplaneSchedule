@@ -3,6 +3,16 @@ import React, { useState } from "react";
 import DESTINATIONS from "../constants/destinations";
 import { EVENT_TYPE_OPTIONS } from "../../wallpaper/constants/eventTypes";
 
+const DESTINATION_OPTIONS = Object.entries(DESTINATIONS).flatMap(
+  ([country, destinationGroup]) =>
+    destinationGroup.cities.map((city) => ({
+      city,
+      country,
+      flag: destinationGroup.flag,
+      searchText: `${country} ${city}`.toLowerCase(),
+    })),
+);
+
 function ScheduleForm({ onAddSchedule }) {
   const [formData, setFormData] = useState({
     date: "",
@@ -16,12 +26,17 @@ function ScheduleForm({ onAddSchedule }) {
     aircraft: "",
     destination: "",
   });
+  const [destinationSearch, setDestinationSearch] = useState("");
+  const [isDestinationOpen, setIsDestinationOpen] = useState(false);
 
   const requiresTimeRange =
     formData.eventType === "flight" ||
     formData.eventType === "standby" ||
     formData.eventType === "training";
   const isFlightEvent = formData.eventType === "flight";
+  const filteredDestinations = DESTINATION_OPTIONS.filter((option) =>
+    option.searchText.includes(destinationSearch.trim().toLowerCase()),
+  ).slice(0, 12);
 
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
@@ -37,7 +52,37 @@ function ScheduleForm({ onAddSchedule }) {
             hongKongArrivalTime: "",
           }
         : {}),
+      ...(name === "eventType" && value !== "flight"
+        ? {
+            destination: "",
+          }
+        : {}),
     }));
+
+    if (name === "eventType" && value !== "flight") {
+      setDestinationSearch("");
+      setIsDestinationOpen(false);
+    }
+  };
+
+  const handleDestinationInputChange = (e) => {
+    const { value } = e.target;
+
+    setDestinationSearch(value);
+    setFormData((prev) => ({
+      ...prev,
+      destination: value,
+    }));
+    setIsDestinationOpen(true);
+  };
+
+  const handleSelectDestination = (city) => {
+    setDestinationSearch(city);
+    setFormData((prev) => ({
+      ...prev,
+      destination: city,
+    }));
+    setIsDestinationOpen(false);
   };
 
   const handleSubmit = async (e) => {
@@ -45,11 +90,9 @@ function ScheduleForm({ onAddSchedule }) {
 
     const missingLayoverTimes =
       formData.isLayover &&
-      (
-        !formData.hongKongDepartureDate ||
+      (!formData.hongKongDepartureDate ||
         !formData.hongKongDepartureTime ||
-        !formData.hongKongArrivalTime
-      );
+        !formData.hongKongArrivalTime);
 
     if (
       !formData.date ||
@@ -98,6 +141,8 @@ function ScheduleForm({ onAddSchedule }) {
       aircraft: "",
       destination: "",
     });
+    setDestinationSearch("");
+    setIsDestinationOpen(false);
   };
 
   return (
@@ -181,7 +226,7 @@ function ScheduleForm({ onAddSchedule }) {
               value={formData.departureTime}
               onChange={handleChange}
               required={requiresTimeRange}
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none"
             />
           </div>
 
@@ -199,7 +244,7 @@ function ScheduleForm({ onAddSchedule }) {
               value={formData.arrivalTime}
               onChange={handleChange}
               required={requiresTimeRange}
-              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none"
             />
           </div>
 
@@ -276,43 +321,60 @@ function ScheduleForm({ onAddSchedule }) {
               onChange={handleChange}
               placeholder="예: HX080"
               required={isFlightEvent}
-              disabled={formData.eventType !== "flight"}
+              disabled={!isFlightEvent}
               className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
             />
           </div>
 
-          <div className="flex flex-1 flex-col lg:col-span-2">
+          <div className="relative flex flex-1 flex-col lg:col-span-2">
             <label
               htmlFor="destination"
               className="mb-2 font-semibold text-gray-700"
             >
               목적지 {isFlightEvent ? "*" : ""}
             </label>
-            <select
+            <input
+              type="text"
               id="destination"
               name="destination"
-              value={formData.destination}
-              onChange={handleChange}
+              value={destinationSearch}
+              onChange={handleDestinationInputChange}
+              onFocus={() => setIsDestinationOpen(true)}
+              onBlur={() => {
+                window.setTimeout(() => {
+                  setIsDestinationOpen(false);
+                }, 120);
+              }}
+              placeholder="목적지를 검색하세요"
               required={isFlightEvent}
-              disabled={formData.eventType !== "flight"}
+              disabled={!isFlightEvent}
+              autoComplete="off"
               className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base font-medium transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
-            >
-              <option value="">목적지를 선택하세요..</option>
-              {Object.entries(DESTINATIONS).map(
-                ([country, destinationGroup]) => (
-                  <optgroup
-                    key={country}
-                    label={`${destinationGroup.flag} ${country}`}
-                  >
-                    {destinationGroup.cities.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </optgroup>
-                ),
-              )}
-            </select>
+            />
+
+            {isFlightEvent && isDestinationOpen ? (
+              <div className="absolute top-full z-20 mt-2 max-h-64 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl">
+                {filteredDestinations.length > 0 ? (
+                  filteredDestinations.map((option) => (
+                    <button
+                      key={option.city}
+                      type="button"
+                      onMouseDown={() => handleSelectDestination(option.city)}
+                      className="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 text-left text-sm text-gray-900 transition hover:bg-gray-50 last:border-b-0"
+                    >
+                      <span>{option.city}</span>
+                      <span className="text-xs text-gray-500">
+                        {option.flag} {option.country}
+                      </span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-4 py-3 text-sm text-gray-500">
+                    검색 결과가 없습니다.
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
 
           <button
