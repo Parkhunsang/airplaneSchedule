@@ -1,8 +1,8 @@
 import React from "react";
-import MonthlyScheduleListScreen from "../features/schedule/components/screens/MonthlyScheduleListScreen";
-import ScheduleEntryScreen from "../features/schedule/components/screens/ScheduleEntryScreen";
-import WallpaperSetupScreen from "../features/wallpaper/components/screens/WallpaperSetupScreen";
-import WallpaperResultScreen from "../features/wallpaper/components/screens/WallpaperResultScreen";
+import MonthlyScheduleListScreen from "../../features/schedule/components/screens/MonthlyScheduleListScreen";
+import ScheduleEntryScreen from "../../features/schedule/components/screens/ScheduleEntryScreen";
+import WallpaperSetupScreen from "../../features/wallpaper/components/screens/WallpaperSetupScreen";
+import WallpaperResultScreen from "../../features/wallpaper/components/screens/WallpaperResultScreen";
 
 function AppScreenContent({
   currentScreen,

@@ -1,4 +1,4 @@
-import { missingFirebaseEnvKeys } from "../firebaseConfig";
+import { missingFirebaseEnvKeys } from "../../firebaseConfig";
 
 function FirebaseConfigNotice() {
   return (
@@ -26,7 +26,9 @@ function FirebaseConfigNotice() {
           <p className="text-sm font-semibold">누락된 키</p>
           <ul className="mt-2 space-y-1 rounded-2xl bg-white/80 p-4 text-sm">
             {missingFirebaseEnvKeys.map((key) => (
-              <li key={key} className="font-mono">{key}</li>
+              <li key={key} className="font-mono">
+                {key}
+              </li>
             ))}
           </ul>
         </div>

@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import loadingImage from "./assets/loading.jpg";
-import AppScreenContent from "./components/AppScreenContent";
-import FirebaseConfigNotice from "./components/FirebaseConfigNotice";
+import AppScreenContent from "./app/components/AppScreenContent";
+import FirebaseConfigNotice from "./app/components/FirebaseConfigNotice";
+import { useAppWorkflowActions } from "./app/hooks/useAppWorkflowActions";
 import { firebaseConfigError } from "./firebaseConfig";
-import { useMonthlyScheduleWorkflow } from "./hooks/useMonthlyScheduleWorkflow";
-import { useThumbnailWorkflow } from "./hooks/useThumbnailWorkflow";
-import { useWorkflowStore } from "./store/useWorkflowStore";
-import {
-  addSchedule,
-  deleteSchedule,
-  subscribeSchedules,
-} from "./features/schedule/services/scheduleService";
-import { generateWallpaperImage } from "./features/wallpaper/utils/wallpaperGenerator";
+import { useMonthlyScheduleWorkflow } from "./app/hooks/useMonthlyScheduleWorkflow";
+import { useSchedules } from "./app/hooks/useSchedules";
+import { useThumbnailWorkflow } from "./app/hooks/useThumbnailWorkflow";
+import { useWorkflowStore } from "./app/store/useWorkflowStore";
+import { deleteSchedule } from "./features/schedule/services/scheduleService";
 import {
   DEFAULT_WORKFLOW_KEY,
   SCREEN_KEYS,
   shouldShowStepper,
-} from "./utils/scheduleViewUtils";
+} from "./app/utils/scheduleViewUtils";
 
 const STEP_MAP = {
   [SCREEN_KEYS.ENTRY]: 1,
@@ -25,26 +22,14 @@ const STEP_MAP = {
 };
 
 function App() {
-  const [schedules, setSchedules] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isGeneratingWallpaper, setIsGeneratingWallpaper] = useState(false);
+  const { schedules, setSchedules, loading } = useSchedules();
   const currentScreen = useWorkflowStore((state) => state.currentScreen);
   const sortOption = useWorkflowStore((state) => state.sortOption);
-  const selectedBgColor = useWorkflowStore((state) => state.selectedBgColor);
-  const eventTypeColors = useWorkflowStore((state) => state.eventTypeColors);
-  const generatedWallpaperUrl = useWorkflowStore(
-    (state) => state.generatedWallpaperUrl,
-  );
   const setCurrentScreen = useWorkflowStore((state) => state.setCurrentScreen);
   const setSortOption = useWorkflowStore((state) => state.setSortOption);
   const setSelectedBgColor = useWorkflowStore(
     (state) => state.setSelectedBgColor,
   );
-  const setEventTypeColors = useWorkflowStore((state) => state.setEventTypeColors);
-  const setGeneratedWallpaperUrl = useWorkflowStore(
-    (state) => state.setGeneratedWallpaperUrl,
-  );
-  const resetWorkflowVisuals = useWorkflowStore((state) => state.resetWorkflowVisuals);
 
   const workflow = useMonthlyScheduleWorkflow({
     schedules,
@@ -67,178 +52,25 @@ function App() {
     defaultWorkflowKey: DEFAULT_WORKFLOW_KEY,
   });
 
-  useEffect(() => {
-    const loadingStartTime = Date.now();
-    let loadingTimer;
-
-    const finishLoading = () => {
-      const elapsed = Date.now() - loadingStartTime;
-      const remaining = Math.max(0, 100 - elapsed);
-
-      loadingTimer = setTimeout(() => {
-        setLoading(false);
-      }, remaining);
-    };
-
-    const unsubscribe = subscribeSchedules(
-      (schedulesData) => {
-        setSchedules(schedulesData);
-        finishLoading();
-      },
-      (error) => {
-        console.error("Firestore 연동 오류:", error);
-        finishLoading();
-      },
-    );
-
-    return () => {
-      unsubscribe();
-
-      if (loadingTimer) {
-        clearTimeout(loadingTimer);
-      }
-    };
-  }, []);
-
-  const handleAddSchedule = async (newSchedule) => {
-    try {
-      const createdAt = new Date().toISOString();
-      const createdDoc = await addSchedule({
-        ...newSchedule,
-        createdAt,
-      });
-
-      setSchedules((prev) => {
-        if (prev.some((schedule) => schedule.id === createdDoc.id)) {
-          return prev;
-        }
-
-        return [
-          ...prev,
-          {
-            id: createdDoc.id,
-            ...newSchedule,
-            createdAt,
-          },
-        ];
-      });
-    } catch (error) {
-      console.error("일정 추가 오류:", error);
-      alert("일정 추가에 실패했습니다. Firebase 설정을 확인해주세요.");
-      throw error;
-    }
-  };
-
-  const handleDeleteSchedule = async (id) => {
-    try {
-      await deleteSchedule(id);
-    } catch (error) {
-      console.error("일정 삭제 오류:", error);
-      alert("일정 삭제에 실패했습니다.");
-    }
-  };
-
-  const handleEventTypeColorChange = (eventType, nextColor) => {
-    setEventTypeColors((prev) => ({
-      ...prev,
-      [eventType]: nextColor,
-    }));
-  };
-
-  const handleGenerateWallpaper = async ({
-    targetSchedules,
-    referenceDate,
-    imageUrl,
-    requireThumbnail = false,
-  }) => {
-    if (requireThumbnail && !imageUrl) {
-      alert("이미지를 먼저 선택해주세요.");
-      return false;
-    }
-
-    setIsGeneratingWallpaper(true);
-
-    try {
-      const wallpaperUrl = await generateWallpaperImage({
-        backgroundColor: selectedBgColor,
-        eventTypeColors,
-        thumbnailImageUrl: imageUrl ?? "",
-        schedules: targetSchedules,
-        referenceDate,
-      });
-
-      setGeneratedWallpaperUrl(wallpaperUrl);
-      return true;
-    } catch (error) {
-      console.error("배경화면 생성 오류:", error);
-      alert("배경화면 생성에 실패했습니다.");
-      return false;
-    } finally {
-      setIsGeneratingWallpaper(false);
-    }
-  };
-
-  const handleSetupNext = async () => {
-    const referenceDate = workflow.workflowSchedules[0]?.date
-      ? new Date(workflow.workflowSchedules[0].date)
-      : new Date();
-
-    const generated = await handleGenerateWallpaper({
-      targetSchedules: workflow.workflowSchedules,
-      referenceDate,
-      imageUrl: thumbnailPreviewUrl,
-      requireThumbnail: true,
-    });
-
-    if (generated) {
-      setCurrentScreen(
-        workflow.activeMonthKey ? SCREEN_KEYS.SAVED_RESULT : SCREEN_KEYS.RESULT,
-      );
-    }
-  };
-
-  const handleOpenSavedMonth = async (monthOption) => {
-    workflow.setActiveMonthKey(monthOption.key);
-    workflow.setActiveMonthLabel(monthOption.label);
-    workflow.setGeneratingMonthLabel(monthOption.label);
-
-    const cachedThumbnail = thumbnailCache[monthOption.key];
-    const generated = await handleGenerateWallpaper({
-      targetSchedules: monthOption.schedules,
-      referenceDate: new Date(`${monthOption.key}-01`),
-      imageUrl: cachedThumbnail?.previewUrl ?? "",
-      requireThumbnail: false,
-    });
-
-    if (generated) {
-      setCurrentScreen(SCREEN_KEYS.SAVED_RESULT);
-    }
-
-    workflow.setGeneratingMonthLabel("");
-  };
-
-  const handleStartNew = () => {
-    workflow.setActiveMonthKey(null);
-    workflow.setActiveMonthLabel("");
-    workflow.setGeneratingMonthLabel("");
-    workflow.setNewWorkflowStartedAt(new Date().toISOString());
-    resetWorkflowVisuals();
-    resetDefaultWorkflowThumbnail();
-    setCurrentScreen(SCREEN_KEYS.ENTRY);
-  };
-
-  const handleDownloadWallpaper = () => {
-    if (!generatedWallpaperUrl) {
-      return;
-    }
-
-    const link = document.createElement("a");
-    link.href = generatedWallpaperUrl;
-    link.download = `schedule_wallpaper_${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
+  const {
+    isGeneratingWallpaper,
+    selectedBgColor,
+    eventTypeColors,
+    generatedWallpaperUrl,
+    handleAddSchedule,
+    handleDeleteSchedule,
+    handleEventTypeColorChange,
+    handleSetupNext,
+    handleOpenSavedMonth,
+    handleStartNew,
+    handleDownloadWallpaper,
+  } = useAppWorkflowActions({
+    setSchedules,
+    workflow,
+    thumbnailCache,
+    thumbnailPreviewUrl,
+    resetDefaultWorkflowThumbnail,
+  });
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">

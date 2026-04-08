@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { DEFAULT_EVENT_TYPE_COLORS } from "../features/wallpaper/constants/eventTypes";
+import { DEFAULT_EVENT_TYPE_COLORS } from "../../features/wallpaper/constants/eventTypes";
 import {
   DEFAULT_BG_COLOR,
   SCREEN_KEYS,
