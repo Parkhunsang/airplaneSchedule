@@ -162,10 +162,7 @@ const buildScheduleMap = (schedules, referenceDate, eventTypeColors) => {
       const middleOffset = Math.floor(layoverDayDiff / 2);
       const middleDate = addDays(startDate, middleOffset);
 
-      if (
-        middleDate >= currentMonthStart &&
-        middleDate <= currentMonthEnd
-      ) {
+      if (middleDate >= currentMonthStart && middleDate <= currentMonthEnd) {
         ensureDay(toDateKey(middleDate)).items.push({
           schedule,
           kind: "flight",
@@ -384,7 +381,6 @@ export const drawCalendar = ({
     const weekendColor =
       index === 0 ? "#d72323" : index === 6 ? "#0a56ff" : "#1b1b1b";
 
-    // 요일 라벨과 하단 요약 문구도 Tailwind가 아니라 캔버스 폰트 설정으로 그려집니다.
     ctx.fillStyle = weekendColor;
     ctx.font = `600 ${scale(12)}px Belgrano, serif`;
     ctx.textAlign = "center";

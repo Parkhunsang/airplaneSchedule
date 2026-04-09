@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as XLSX from "xlsx";
 import {
   addSchedule,
   deleteSchedule,
@@ -167,6 +168,32 @@ export const useAppWorkflowActions = ({
     link.remove();
   };
 
+  const handleExportSchedulesToExcel = (schedules) => {
+    if (!schedules.length) {
+      alert("내보낼 일정이 없습니다.");
+      return;
+    }
+
+    const rows = schedules.map((schedule) => ({
+      날짜: schedule.date ?? "",
+      근무종류: schedule.eventType ?? "",
+      레이오버: schedule.isLayover ? "Y" : "N",
+      출발시간: schedule.departureTime ?? "",
+      도착시간: schedule.arrivalTime ?? "",
+      홍콩출발날짜: schedule.hongKongDepartureDate ?? "",
+      홍콩출발시간: schedule.hongKongDepartureTime ?? "",
+      홍콩도착시간: schedule.hongKongArrivalTime ?? "",
+      편명: schedule.aircraft ?? "",
+      목적지: schedule.destination ?? "",
+      생성시각: schedule.createdAt ?? "",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Schedules");
+    XLSX.writeFile(workbook, `schedule-list-${Date.now()}.xlsx`);
+  };
+
   return {
     isGeneratingWallpaper,
     selectedBgColor,
@@ -179,5 +206,6 @@ export const useAppWorkflowActions = ({
     handleOpenSavedMonth,
     handleStartNew,
     handleDownloadWallpaper,
+    handleExportSchedulesToExcel,
   };
 };

@@ -64,6 +64,7 @@ function App() {
     handleOpenSavedMonth,
     handleStartNew,
     handleDownloadWallpaper,
+    handleExportSchedulesToExcel,
   } = useAppWorkflowActions({
     setSchedules,
     workflow,
@@ -127,6 +128,7 @@ function App() {
                 onScreenChange={setCurrentScreen}
                 onAddSchedule={handleAddSchedule}
                 onDeleteSchedule={handleDeleteSchedule}
+                onExportSchedules={handleExportSchedulesToExcel}
                 onSelectMonth={handleOpenSavedMonth}
                 onDeleteMonth={workflow.handleDeleteMonth}
                 onStartNew={handleStartNew}

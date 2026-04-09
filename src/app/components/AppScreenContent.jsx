@@ -14,6 +14,7 @@ function AppScreenContent({
   onScreenChange,
   onAddSchedule,
   onDeleteSchedule,
+  onExportSchedules,
   onSelectMonth,
   onDeleteMonth,
   onStartNew,
@@ -56,6 +57,7 @@ function AppScreenContent({
         onChangeSortOption={onSortOptionChange}
         onAddSchedule={onAddSchedule}
         onDeleteSchedule={onDeleteSchedule}
+        onExportSchedules={onExportSchedules}
         onPrev={onGoToMonthList}
         onNext={() => onScreenChange(screenKeys.SETUP)}
       />
