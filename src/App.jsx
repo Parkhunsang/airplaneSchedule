@@ -9,6 +9,7 @@ import { useSchedules } from "./app/hooks/useSchedules";
 import { useThumbnailWorkflow } from "./app/hooks/useThumbnailWorkflow";
 import { useWorkflowStore } from "./app/store/useWorkflowStore";
 import { deleteSchedule } from "./features/schedule/services/scheduleService";
+import { useTranslation } from "react-i18next";
 import {
   DEFAULT_WORKFLOW_KEY,
   SCREEN_KEYS,
@@ -22,9 +23,12 @@ const STEP_MAP = {
 };
 
 function App() {
+  const { t, i18n } = useTranslation();
   const { schedules, setSchedules, loading } = useSchedules();
+  const language = useWorkflowStore((state) => state.language);
   const currentScreen = useWorkflowStore((state) => state.currentScreen);
   const sortOption = useWorkflowStore((state) => state.sortOption);
+  const setLanguage = useWorkflowStore((state) => state.setLanguage);
   const setCurrentScreen = useWorkflowStore((state) => state.setCurrentScreen);
   const setSortOption = useWorkflowStore((state) => state.setSortOption);
   const setSelectedBgColor = useWorkflowStore(
@@ -73,11 +77,42 @@ function App() {
     resetDefaultWorkflowThumbnail,
   });
 
+  const handleChangeLanguage = (nextLanguage) => {
+    setLanguage(nextLanguage);
+    i18n.changeLanguage(nextLanguage);
+    document.documentElement.lang = nextLanguage;
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
       <header className="mb-3 w-full bg-[#1565C0] text-white shadow-lg">
-        <div className="flex h-12 w-full max-w-3xl items-center px-3">
-          <h1 className="text-xl font-bold sm:text-2xl">HAN BI SCHEDULE</h1>
+        <div className="flex h-12 w-full max-w-3xl items-center justify-between px-3">
+          <h1 className="text-xl font-bold sm:text-2xl">{t("common.appTitle")}</h1>
+          <div className="flex items-center gap-2 text-xs sm:text-sm">
+            <span className="hidden sm:inline">{t("common.language")}</span>
+            <button
+              type="button"
+              onClick={() => handleChangeLanguage("ko")}
+              className={`rounded-full px-3 py-1 font-semibold ${
+                language === "ko"
+                  ? "bg-white text-[#1565C0]"
+                  : "bg-white/20 text-white"
+              }`}
+            >
+              KO
+            </button>
+            <button
+              type="button"
+              onClick={() => handleChangeLanguage("en")}
+              className={`rounded-full px-3 py-1 font-semibold ${
+                language === "en"
+                  ? "bg-white text-[#1565C0]"
+                  : "bg-white/20 text-white"
+              }`}
+            >
+              EN
+            </button>
+          </div>
         </div>
       </header>
 
@@ -89,18 +124,20 @@ function App() {
             <div className="flex min-h-screen w-full flex-col items-center justify-center gap-4 py-12">
               <img
                 src={loadingImage}
-                alt="로딩 이미지"
+                alt={t("common.loadingData")}
                 className="h-36 w-36 rounded-xl object-cover shadow-md sm:h-44 sm:w-44"
               />
               <p className="text-lg font-semibold text-gray-700">
-                Firebase에서 데이터를 불러오는 중...
+                {t("common.loadingData")}
               </p>
             </div>
           ) : (
             <>
               {shouldShowStepper(currentScreen) ? (
                 <div className="mx-auto mb-5 flex w-full max-w-3xl items-center justify-between text-sm text-gray-500">
-                  <span>Step {STEP_MAP[currentScreen]} / 3</span>
+                  <span>
+                    {t("common.step")} {STEP_MAP[currentScreen]} / 3
+                  </span>
                   <div className="flex items-center gap-2" aria-hidden="true">
                     {[
                       SCREEN_KEYS.ENTRY,
@@ -159,7 +196,7 @@ function App() {
       <footer className="mt-auto w-full border-t border-gray-200 bg-white">
         <div className="mx-auto w-full max-w-3xl px-3 py-4 text-center sm:py-6">
           <p className="text-xs opacity-75 sm:text-sm">
-            Schedule App - For Han Bi Yun
+            {t("common.footer")}
           </p>
         </div>
       </footer>

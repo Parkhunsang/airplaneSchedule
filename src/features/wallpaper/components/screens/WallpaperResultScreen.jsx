@@ -1,4 +1,5 @@
-﻿import React from "react";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import WallpaperBuilder from "../WallpaperBuilder";
 
 function WallpaperResultScreen({
@@ -8,25 +9,28 @@ function WallpaperResultScreen({
   onDownload,
   onGoStepOne,
   onGoStepTwo,
-  title = "배경화면 결과",
-  subtitle = "완성된 이미지를 확인하고 저장하거나 다시 만들 수 있어요.",
-  stepLabel = "Step 4. 결과",
+  title,
+  subtitle,
+  stepLabel,
   showPrevButton = true,
   showHomeButton = true,
   showStepMoveButtons = true,
 }) {
+  const { t } = useTranslation();
+
+  const resolvedTitle = title ?? t("wallpaper.resultTitle");
+  const resolvedSubtitle = subtitle ?? t("wallpaper.resultSubtitle");
+  const resolvedStepLabel = stepLabel ?? t("wallpaper.resultStepLabel");
+
   return (
     <section className="min-w-full min-w-0 flex-none">
       <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col gap-5">
-        <WallpaperBuilder
-          title={title}
-          subtitle={subtitle}
-        >
+        <WallpaperBuilder title={resolvedTitle} subtitle={resolvedSubtitle}>
           <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-5">
             <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
-              {stepLabel ? (
+              {resolvedStepLabel ? (
                 <p className="mb-3 text-sm font-medium text-gray-700 sm:text-base">
-                  {stepLabel}
+                  {resolvedStepLabel}
                 </p>
               ) : null}
 
@@ -40,18 +44,18 @@ function WallpaperResultScreen({
                     />
                   </div>
 
-                  <div className="mt-4 bg-white p-4 rounded-lg">
-                    <p className="font-semibold text-slate-800">Preview</p>
+                  <div className="mt-4 rounded-lg bg-white p-4">
+                    <p className="font-semibold text-slate-800">
+                      {t("wallpaper.resultPreviewTitle")}
+                    </p>
                     <p className="mt-1 break-words text-sm leading-6 text-slate-600">
-                      선택한 사진과 일정 카드가 함께 들어간 배경화면 결과를
-                      여기에서 확인할 수 있습니다.
+                      {t("wallpaper.resultPreviewDescription")}
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="rounded-2xl bg-gray-50 p-4 text-sm leading-6 text-gray-600">
-                  결과가 아직 없습니다. 이전 단계에서 사진을 선택하고 배경화면을
-                  생성해주세요.
+                  {t("wallpaper.noResult")}
                 </div>
               )}
             </div>
@@ -61,9 +65,9 @@ function WallpaperResultScreen({
                 type="button"
                 onClick={onDownload}
                 disabled={!generatedWallpaperUrl}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#1E6DEB] hover:bg-[#1E6DEB] active:bg-[#1565C0] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#1E6DEB] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto"
               >
-                이미지 다운로드
+                {t("wallpaper.downloadImage")}
               </button>
               {showStepMoveButtons ? (
                 <button
@@ -71,7 +75,7 @@ function WallpaperResultScreen({
                   onClick={onGoStepOne}
                   className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 sm:w-auto"
                 >
-                  1단계로 이동
+                  {t("wallpaper.goStep1")}
                 </button>
               ) : null}
               {showStepMoveButtons ? (
@@ -80,7 +84,7 @@ function WallpaperResultScreen({
                   onClick={onGoStepTwo}
                   className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 sm:w-auto"
                 >
-                  2단계로 이동
+                  {t("wallpaper.goStep2")}
                 </button>
               ) : null}
               {showPrevButton ? (
@@ -89,7 +93,7 @@ function WallpaperResultScreen({
                   onClick={onPrev}
                   className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 sm:w-auto"
                 >
-                  이전
+                  {t("schedule.prev")}
                 </button>
               ) : null}
             </div>
@@ -102,7 +106,7 @@ function WallpaperResultScreen({
               onClick={onGoHome}
               className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-700 sm:w-auto sm:text-base"
             >
-              처음으로
+              {t("wallpaper.home")}
             </button>
           </div>
         ) : null}

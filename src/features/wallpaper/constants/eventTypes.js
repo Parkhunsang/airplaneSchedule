@@ -1,22 +1,26 @@
-export const EVENT_TYPE_OPTIONS = [
-  { value: "flight", label: "Flight" },
-  { value: "training", label: "Training" },
-  { value: "standby", label: "Standby" },
-];
+import i18n from "../../../app/i18n";
 
-export const BLOCK_COLOR_OPTIONS = [
-  { value: "flight", label: "Flight" },
-  { value: "off", label: "Off" },
-  { value: "training", label: "Training" },
-  { value: "standby", label: "Standby" },
-];
+export const EVENT_TYPE_VALUES = ["flight", "training", "standby"];
+export const BLOCK_COLOR_VALUES = ["flight", "off", "training", "standby"];
 
-export const EVENT_TYPE_LABELS = {
-  flight: "Flight",
-  off: "Off",
-  training: "Training",
-  standby: "Standby",
-};
+export const getEventTypeLabel = (eventType, t = i18n.t.bind(i18n)) =>
+  t(`eventTypes.${eventType}`);
+
+export const getEventTypeOptions = (t = i18n.t.bind(i18n)) =>
+  EVENT_TYPE_VALUES.map((value) => ({
+    value,
+    label: getEventTypeLabel(value, t),
+  }));
+
+export const getBlockColorOptions = (t = i18n.t.bind(i18n)) =>
+  BLOCK_COLOR_VALUES.map((value) => ({
+    value,
+    label: getEventTypeLabel(value, t),
+  }));
+
+export const EVENT_TYPE_LABELS = Object.fromEntries(
+  BLOCK_COLOR_VALUES.map((value) => [value, getEventTypeLabel(value)]),
+);
 
 export const DEFAULT_EVENT_TYPE_COLORS = {
   flight: "#87C4EE",

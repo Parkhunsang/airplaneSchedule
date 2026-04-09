@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   addSchedule,
   deleteSchedule,
@@ -14,6 +15,7 @@ export const useAppWorkflowActions = ({
   thumbnailPreviewUrl,
   resetDefaultWorkflowThumbnail,
 }) => {
+  const { t } = useTranslation();
   const [isGeneratingWallpaper, setIsGeneratingWallpaper] = useState(false);
   const selectedBgColor = useWorkflowStore((state) => state.selectedBgColor);
   const eventTypeColors = useWorkflowStore((state) => state.eventTypeColors);
@@ -169,7 +171,7 @@ export const useAppWorkflowActions = ({
 
   const handleExportSchedulesToExcel = async (schedules) => {
     if (!schedules.length) {
-      alert("내보낼 일정이 없습니다.");
+      alert(t("schedule.noSchedulesToExport"));
       return;
     }
 
@@ -196,7 +198,7 @@ export const useAppWorkflowActions = ({
       XLSX.writeFile(workbook, `schedule-list-${Date.now()}.xlsx`);
     } catch (error) {
       console.error("엑셀 파일 생성 오류:", error);
-      alert("엑셀 파일 생성에 실패했습니다.");
+      alert(t("schedule.excelExportFailed"));
     }
   };
 

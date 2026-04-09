@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 function MonthlyScheduleListScreen({
   monthOptions,
@@ -9,15 +10,18 @@ function MonthlyScheduleListScreen({
   onDeleteMonth,
   onStartNew,
 }) {
+  const { t } = useTranslation();
+
   return (
     <section className="min-w-full flex-none">
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
         <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div className="mb-5">
-            <h2 className="text-2xl font-bold text-gray-900">저장된 월 스케줄</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              {t("monthList.title")}
+            </h2>
             <p className="mt-2 text-sm leading-6 text-gray-600 sm:text-base">
-              원하는 월을 선택하면 저장된 일정으로 만든 이미지 목업을 바로 확인할 수
-              있습니다.
+              {t("monthList.description")}
             </p>
           </div>
 
@@ -25,7 +29,8 @@ function MonthlyScheduleListScreen({
             <div className="space-y-3">
               {monthOptions.map((option) => {
                 const isDeleting = deletingMonthKey === option.key;
-                const isOpening = isGenerating && generatingLabel === option.label;
+                const isOpening =
+                  isGenerating && generatingLabel === option.label;
 
                 return (
                   <div
@@ -43,11 +48,15 @@ function MonthlyScheduleListScreen({
                           {option.label}
                         </p>
                         <p className="mt-1 text-sm text-gray-500">
-                          총 {option.schedules.length}개의 일정
+                          {t("monthList.totalSchedules", {
+                            count: option.schedules.length,
+                          })}
                         </p>
                       </div>
                       <span className="text-sm font-semibold text-[#1565C0]">
-                        {isOpening ? "생성 중..." : "열기"}
+                        {isOpening
+                          ? t("monthList.opening")
+                          : t("monthList.open")}
                       </span>
                     </button>
 
@@ -57,7 +66,9 @@ function MonthlyScheduleListScreen({
                       disabled={isGenerating || isDeleting}
                       className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      {isDeleting ? "삭제 중..." : "삭제"}
+                      {isDeleting
+                        ? t("monthList.deleting")
+                        : t("monthList.delete")}
                     </button>
                   </div>
                 );
@@ -65,7 +76,7 @@ function MonthlyScheduleListScreen({
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-4 py-8 text-center text-sm text-gray-500">
-              아직 저장된 월 스케줄이 없습니다.
+              {t("monthList.empty")}
             </div>
           )}
         </section>
@@ -76,7 +87,7 @@ function MonthlyScheduleListScreen({
             onClick={onStartNew}
             className="inline-flex items-center justify-center rounded-full bg-[#1E6DEB] px-5 py-3 text-sm font-semibold text-white sm:text-base"
           >
-            새 일정 입력
+            {t("monthList.startNew")}
           </button>
         </div>
       </div>

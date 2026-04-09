@@ -25,8 +25,10 @@
     "@vitejs/plugin-react": "^5.1.4",
     "figma-api": "^2.1.2-beta",
     "firebase": "^12.9.0",
+    "i18next": "^26.0.4",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-i18next": "^17.0.2",
     "vite": "^7.3.1",
     "xlsx": "^0.18.5",
     "zustand": "^5.0.12"

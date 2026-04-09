@@ -7,6 +7,10 @@ import {
 } from "../utils/scheduleViewUtils";
 
 export const useWorkflowStore = create((set) => ({
+  language:
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("language") || "ko"
+      : "ko",
   currentScreen: SCREEN_KEYS.MONTH_LIST,
   sortOption: SORT_OPTIONS.DATE_ASC,
   selectedBgColor: DEFAULT_BG_COLOR,
@@ -19,6 +23,13 @@ export const useWorkflowStore = create((set) => ({
   deletingMonthKey: "",
   newWorkflowStartedAt: null,
 
+  setLanguage: (language) => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("language", language);
+    }
+
+    set({ language });
+  },
   setCurrentScreen: (currentScreen) => set({ currentScreen }),
   setSortOption: (sortOption) => set({ sortOption }),
   setSelectedBgColor: (selectedBgColor) =>

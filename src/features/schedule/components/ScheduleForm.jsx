@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-
+import { useTranslation } from "react-i18next";
 import DESTINATIONS from "../constants/destinations";
-import { EVENT_TYPE_OPTIONS } from "../../wallpaper/constants/eventTypes";
+import { getEventTypeOptions } from "../../wallpaper/constants/eventTypes";
 
 const DESTINATION_OPTIONS = Object.entries(DESTINATIONS).flatMap(
   ([country, destinationGroup]) =>
@@ -14,6 +14,8 @@ const DESTINATION_OPTIONS = Object.entries(DESTINATIONS).flatMap(
 );
 
 function ScheduleForm({ onAddSchedule }) {
+  const { t } = useTranslation();
+  const eventTypeOptions = getEventTypeOptions(t);
   const [formData, setFormData] = useState({
     date: "",
     eventType: "flight",
@@ -102,7 +104,7 @@ function ScheduleForm({ onAddSchedule }) {
       missingLayoverTimes ||
       (isFlightEvent && (!formData.aircraft || !formData.destination))
     ) {
-      alert("모든 필수 항목을 입력해주세요!");
+      alert(t("schedule.requiredAlert"));
       return;
     }
 
@@ -149,7 +151,7 @@ function ScheduleForm({ onAddSchedule }) {
     <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="min-h-[400px]">
         <p className="text-xl font-bold text-gray-900 sm:text-2xl">
-          비행 일정 추가
+          {t("schedule.addTitle")}
         </p>
         <form
           onSubmit={handleSubmit}
@@ -157,7 +159,7 @@ function ScheduleForm({ onAddSchedule }) {
         >
           <div className="flex flex-1 flex-col">
             <label htmlFor="date" className="mb-2 font-semibold text-gray-700">
-              날짜 *
+              {t("schedule.date")} *
             </label>
             <input
               type="date"
@@ -175,7 +177,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="eventType"
               className="mb-2 font-semibold text-gray-700"
             >
-              근무 종류 *
+              {t("schedule.eventType")} *
             </label>
             <select
               id="eventType"
@@ -184,7 +186,7 @@ function ScheduleForm({ onAddSchedule }) {
               onChange={handleChange}
               className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base font-medium transition focus:border-[#1565C0] focus:outline-none"
             >
-              {EVENT_TYPE_OPTIONS.map((option) => (
+              {eventTypeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -197,7 +199,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="isLayover"
               className="mb-2 font-semibold text-gray-700"
             >
-              레이오버
+              {t("schedule.layover")}
             </label>
             <label className="flex min-h-[44px] items-center gap-3 rounded-lg border-2 border-gray-300 px-4 py-3 text-base text-gray-900">
               <input
@@ -208,7 +210,7 @@ function ScheduleForm({ onAddSchedule }) {
                 onChange={handleChange}
                 className="h-4 w-4 accent-[#1565C0]"
               />
-              <span>레이오버 포함</span>
+              <span>{t("schedule.includeLayover")}</span>
             </label>
           </div>
 
@@ -217,7 +219,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="departureTime"
               className="mb-2 font-semibold text-gray-700"
             >
-              출발 시간 {requiresTimeRange ? "*" : ""}
+              {t("schedule.departureTime")} {requiresTimeRange ? "*" : ""}
             </label>
             <input
               type="time"
@@ -235,7 +237,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="arrivalTime"
               className="mb-2 font-semibold text-gray-700"
             >
-              도착 시간 {requiresTimeRange ? "*" : ""}
+              {t("schedule.arrivalTime")} {requiresTimeRange ? "*" : ""}
             </label>
             <input
               type="time"
@@ -255,7 +257,7 @@ function ScheduleForm({ onAddSchedule }) {
                   htmlFor="hongKongDepartureDate"
                   className="mb-2 font-semibold text-gray-700"
                 >
-                  홍콩 출발 날짜 *
+                  {t("schedule.hongKongDepartureDate")} *
                 </label>
                 <input
                   type="date"
@@ -273,7 +275,7 @@ function ScheduleForm({ onAddSchedule }) {
                   htmlFor="hongKongDepartureTime"
                   className="mb-2 font-semibold text-gray-700"
                 >
-                  홍콩 출발 시간 *
+                  {t("schedule.hongKongDepartureTime")} *
                 </label>
                 <input
                   type="time"
@@ -291,7 +293,7 @@ function ScheduleForm({ onAddSchedule }) {
                   htmlFor="hongKongArrivalTime"
                   className="mb-2 font-semibold text-gray-700"
                 >
-                  홍콩 도착 시간 *
+                  {t("schedule.hongKongArrivalTime")} *
                 </label>
                 <input
                   type="time"
@@ -311,7 +313,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="aircraft"
               className="mb-2 font-semibold text-gray-700"
             >
-              비행기 편명 {isFlightEvent ? "*" : ""}
+              {t("schedule.aircraft")} {isFlightEvent ? "*" : ""}
             </label>
             <input
               type="text"
@@ -319,7 +321,7 @@ function ScheduleForm({ onAddSchedule }) {
               name="aircraft"
               value={formData.aircraft}
               onChange={handleChange}
-              placeholder="예: HX080"
+              placeholder={t("schedule.aircraftPlaceholder")}
               required={isFlightEvent}
               disabled={!isFlightEvent}
               className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
@@ -331,7 +333,7 @@ function ScheduleForm({ onAddSchedule }) {
               htmlFor="destination"
               className="mb-2 font-semibold text-gray-700"
             >
-              목적지 {isFlightEvent ? "*" : ""}
+              {t("schedule.destination")} {isFlightEvent ? "*" : ""}
             </label>
             <input
               type="text"
@@ -345,7 +347,7 @@ function ScheduleForm({ onAddSchedule }) {
                   setIsDestinationOpen(false);
                 }, 120);
               }}
-              placeholder="목적지를 검색하세요"
+              placeholder={t("schedule.destinationPlaceholder")}
               required={isFlightEvent}
               disabled={!isFlightEvent}
               autoComplete="off"
@@ -370,7 +372,7 @@ function ScheduleForm({ onAddSchedule }) {
                   ))
                 ) : (
                   <div className="px-4 py-3 text-sm text-gray-500">
-                    검색 결과가 없습니다.
+                    {t("schedule.noDestinationResults")}
                   </div>
                 )}
               </div>
@@ -382,7 +384,7 @@ function ScheduleForm({ onAddSchedule }) {
             className="col-span-1 inline-flex min-h-[48px] items-center justify-center gap-2 self-end rounded-2xl bg-[#1E6DEB] px-6 py-3 text-base font-semibold text-white shadow-lg transition-all hover:bg-[#1E6DEB] active:bg-[#1565C0] sm:col-span-2 lg:col-span-1"
           >
             <span className="text-lg leading-none">+</span>
-            <span>일정 추가</span>
+            <span>{t("schedule.addSchedule")}</span>
           </button>
         </form>
       </div>

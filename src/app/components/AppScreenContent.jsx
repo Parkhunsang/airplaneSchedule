@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import MonthlyScheduleListScreen from "../../features/schedule/components/screens/MonthlyScheduleListScreen";
 import ScheduleEntryScreen from "../../features/schedule/components/screens/ScheduleEntryScreen";
 import WallpaperSetupScreen from "../../features/wallpaper/components/screens/WallpaperSetupScreen";
@@ -35,6 +36,8 @@ function AppScreenContent({
   onDownload,
   activeMonthLabel,
 }) {
+  const { t } = useTranslation();
+
   if (currentScreen === screenKeys.MONTH_LIST) {
     return (
       <MonthlyScheduleListScreen
@@ -90,8 +93,8 @@ function AppScreenContent({
         onGoStepOne={() => onScreenChange(screenKeys.ENTRY)}
         onGoStepTwo={() => onScreenChange(screenKeys.SETUP)}
         onDownload={onDownload}
-        title={activeMonthLabel || "저장된 월 스케줄 결과"}
-        subtitle="저장된 월 일정으로 만든 이미지 목업입니다."
+        title={activeMonthLabel || undefined}
+        subtitle={t("wallpaper.savedResultSubtitle")}
         stepLabel=""
         showPrevButton
         showHomeButton={false}

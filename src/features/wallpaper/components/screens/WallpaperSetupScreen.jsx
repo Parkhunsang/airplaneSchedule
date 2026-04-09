@@ -1,9 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import WallpaperBuilder from "../WallpaperBuilder";
 import {
-  BLOCK_COLOR_OPTIONS,
   DEFAULT_EVENT_TYPE_COLORS,
-  EVENT_TYPE_LABELS,
+  getBlockColorOptions,
+  getEventTypeLabel,
 } from "../../constants/eventTypes";
 
 const BG_PALETTE = [
@@ -33,6 +34,9 @@ function WallpaperSetupScreen({
   onPrev,
   onNext,
 }) {
+  const { t } = useTranslation();
+  const blockColorOptions = getBlockColorOptions(t);
+
   const handleCustomColorChange = (e) => {
     onBgColorChange(e.target.value);
   };
@@ -46,13 +50,13 @@ function WallpaperSetupScreen({
     <section className="min-w-full min-w-0 flex-none">
       <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col gap-5">
         <WallpaperBuilder
-          title="배경화면 설정"
-          subtitle="배경 색상, 이벤트 블럭 색상, 사진을 선택해서 배경화면을 생성하세요."
+          title={t("wallpaper.setupTitle")}
+          subtitle={t("wallpaper.setupSubtitle")}
         >
           <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-5">
             <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
               <p className="mb-3 text-sm font-medium text-gray-700 sm:text-base">
-                Step 1. 배경 색상을 선택하세요.
+                {t("wallpaper.step1")}
               </p>
               <div className="grid grid-cols-4 gap-3 sm:flex sm:flex-wrap">
                 {BG_PALETTE.map((color) => (
@@ -76,7 +80,7 @@ function WallpaperSetupScreen({
                   htmlFor="custom-bg-color"
                   className="text-sm text-gray-700 sm:min-w-[120px]"
                 >
-                  직접 선택
+                  {t("wallpaper.customColor")}
                 </label>
                 <input
                   id="custom-bg-color"
@@ -84,12 +88,14 @@ function WallpaperSetupScreen({
                   value={selectedBgColor}
                   onChange={handleCustomColorChange}
                   className="h-10 w-14 cursor-pointer rounded-md border border-gray-300 bg-white p-1"
-                  aria-label="사용자 지정 배경 색상 선택"
+                  aria-label={t("wallpaper.customColorAria")}
                 />
               </div>
 
               <div className="mt-4 flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
-                <span className="text-sm text-gray-700">선택한 배경 색상</span>
+                <span className="text-sm text-gray-700">
+                  {t("wallpaper.selectedBgColor")}
+                </span>
                 <span
                   className="inline-flex w-fit max-w-full break-all rounded-full px-3 py-1 text-xs text-white"
                   style={{ backgroundColor: selectedBgColor }}
@@ -101,10 +107,10 @@ function WallpaperSetupScreen({
 
             <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
               <p className="mb-3 text-sm font-medium text-gray-700 sm:text-base">
-                Step 2. 이벤트 블럭 색상을 설정하세요.
+                {t("wallpaper.step2")}
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {BLOCK_COLOR_OPTIONS.map(({ value, label }) => (
+                {blockColorOptions.map(({ value, label }) => (
                   <label
                     key={value}
                     className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3"
@@ -130,7 +136,7 @@ function WallpaperSetupScreen({
                         onEventTypeColorChange(value, e.target.value)
                       }
                       className="ml-auto h-10 w-14 cursor-pointer rounded-md border border-gray-300 bg-white p-1"
-                      aria-label={`${EVENT_TYPE_LABELS[value]} color`}
+                      aria-label={`${getEventTypeLabel(value, t)} color`}
                     />
                   </label>
                 ))}
@@ -139,7 +145,7 @@ function WallpaperSetupScreen({
 
             <div className="min-w-0 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 sm:p-5">
               <p className="mb-3 text-sm font-medium text-gray-700 sm:text-base">
-                Step 3. 사진을 선택하세요.
+                {t("wallpaper.step3")}
               </p>
               <input
                 type="file"
@@ -149,23 +155,23 @@ function WallpaperSetupScreen({
               />
               {thumbnailFileName ? (
                 <p className="mt-2 break-words text-xs leading-5 text-gray-600">
-                  선택한 파일: {thumbnailFileName}
+                  {t("wallpaper.selectedFile")}: {thumbnailFileName}
                 </p>
               ) : null}
               {thumbnailDimensions ? (
                 <p className="mt-1 text-xs leading-5 text-gray-600">
-                  이미지 크기: {thumbnailDimensions.width} x{" "}
+                  {t("wallpaper.imageSize")}: {thumbnailDimensions.width} x{" "}
                   {thumbnailDimensions.height}
                 </p>
               ) : null}
-              <p className="mt-2 break-words text-xs leading-5 text-gray-500">
-                갤러리에서 사진을 선택해주세요.
-                <br />
-                권장 크기는 가로 360px, 세로 288px입니다.
+              <p className="mt-2 break-words whitespace-pre-line text-xs leading-5 text-gray-500">
+                {t("wallpaper.choosePhoto")}
               </p>
               {thumbnailPreviewUrl ? (
                 <div className="mt-4 min-w-0">
-                  <p className="mb-2 text-sm text-gray-700">미리보기</p>
+                  <p className="mb-2 text-sm text-gray-700">
+                    {t("wallpaper.preview")}
+                  </p>
                   <img
                     src={thumbnailPreviewUrl}
                     alt="thumbnail preview"
@@ -174,7 +180,7 @@ function WallpaperSetupScreen({
                 </div>
               ) : (
                 <div className="mt-4 rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-sm text-gray-500">
-                  아직 선택된 사진이 없습니다.
+                  {t("wallpaper.noPhoto")}
                 </div>
               )}
             </div>
@@ -186,7 +192,7 @@ function WallpaperSetupScreen({
             onClick={onPrev}
             className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-700 sm:w-auto sm:text-base"
           >
-            이전
+            {t("schedule.prev")}
           </button>
           <button
             type="button"
@@ -194,7 +200,7 @@ function WallpaperSetupScreen({
             disabled={!thumbnailPreviewUrl || isGenerating}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1E6DEB] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto sm:text-base"
           >
-            <span>{isGenerating ? "생성 중..." : "다음"}</span>
+            <span>{isGenerating ? t("wallpaper.generating") : t("schedule.next")}</span>
             <span aria-hidden="true">→</span>
           </button>
         </div>
