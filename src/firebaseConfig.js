@@ -27,7 +27,7 @@ export const firebaseConfigError =
   missingFirebaseEnvKeys.length > 0
     ? `Firebase 환경변수 누락: ${missingFirebaseEnvKeys.join(
         ", ",
-      )}. Netlify Site configuration > Environment variables에 VITE_FIREBASE_* 값을 등록한 뒤 다시 배포하세요.`
+      )}. Cloudflare Pages > Settings > Variables and Secrets에 VITE_FIREBASE_* 값을 등록한 뒤 다시 배포하세요.`
     : null;
 
 if (firebaseConfigError) {
