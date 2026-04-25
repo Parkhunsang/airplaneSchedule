@@ -1,3 +1,5 @@
+const SITE_URL = "https://scheduleapp-a451d.web.app";
+
 const SEO_CONTENT = {
   ko: {
     title: "HAN BI SCHEDULE | 비행 일정 관리 · 배경화면 생성 앱",
@@ -38,12 +40,19 @@ export const syncDocumentSeo = (language = "ko") => {
   upsertMeta('meta[property="og:title"]', "content", title);
   upsertMeta('meta[property="og:description"]', "content", description);
   upsertMeta('meta[property="og:locale"]', "content", ogLocale);
+  upsertMeta('meta[property="og:url"]', "content", `${SITE_URL}/`);
+  upsertMeta('meta[property="og:image"]', "content", `${SITE_URL}/og-image.svg`);
   upsertMeta('meta[name="twitter:title"]', "content", title);
   upsertMeta('meta[name="twitter:description"]', "content", description);
+  upsertMeta('meta[name="twitter:image"]', "content", `${SITE_URL}/og-image.svg`);
 
   const canonicalLink = document.head.querySelector('link[rel="canonical"]');
+  const currentUrl =
+    typeof window !== "undefined"
+      ? `${SITE_URL}${window.location.pathname}`
+      : `${SITE_URL}/`;
 
-  if (canonicalLink && typeof window !== "undefined") {
-    canonicalLink.setAttribute("href", window.location.href);
+  if (canonicalLink) {
+    canonicalLink.setAttribute("href", currentUrl);
   }
 };

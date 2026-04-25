@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#EAF4FF"/>
+  <rect x="60" y="60" width="1080" height="510" rx="36" fill="#1565C0"/>
+  <circle cx="1020" cy="138" r="70" fill="#8FD3FF" fill-opacity="0.35"/>
+  <circle cx="153" cy="478" r="96" fill="#FFFFFF" fill-opacity="0.12"/>
+  <rect x="116" y="140" width="360" height="24" rx="12" fill="#8FD3FF"/>
+  <rect x="116" y="188" width="520" height="32" rx="16" fill="white"/>
+  <rect x="116" y="244" width="438" height="20" rx="10" fill="#D7EBFF"/>
+  <rect x="116" y="286" width="410" height="20" rx="10" fill="#D7EBFF"/>
+  <rect x="116" y="358" width="450" height="124" rx="24" fill="white" fill-opacity="0.14"/>
+  <rect x="620" y="156" width="456" height="298" rx="28" fill="white"/>
+  <rect x="652" y="200" width="168" height="24" rx="12" fill="#1565C0"/>
+  <rect x="652" y="246" width="270" height="18" rx="9" fill="#C9E2FF"/>
+  <rect x="652" y="284" width="220" height="18" rx="9" fill="#C9E2FF"/>
+  <rect x="652" y="340" width="128" height="60" rx="16" fill="#EAF4FF"/>
+  <rect x="794" y="340" width="128" height="60" rx="16" fill="#EAF4FF"/>
+  <rect x="936" y="340" width="108" height="60" rx="16" fill="#EAF4FF"/>
+  <text x="116" y="390" fill="white" font-family="Pretendard, Arial, sans-serif" font-size="56" font-weight="700">HAN BI</text>
+  <text x="116" y="452" fill="white" font-family="Pretendard, Arial, sans-serif" font-size="56" font-weight="700">SCHEDULE</text>
+  <text x="116" y="516" fill="#D7EBFF" font-family="Pretendard, Arial, sans-serif" font-size="28" font-weight="500">월별 비행 일정 관리 · 배경화면 생성 앱</text>
+</svg>

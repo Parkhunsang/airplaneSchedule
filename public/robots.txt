@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://scheduleapp-a451d.web.app/sitemap.xml
