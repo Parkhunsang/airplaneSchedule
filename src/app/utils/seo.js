@@ -1,4 +1,4 @@
-const SITE_URL = "https://scheduleapp-a451d.web.app";
+const SITE_URL = "https://airplane.schedules.workers.dev";
 
 const SEO_CONTENT = {
   ko: {
