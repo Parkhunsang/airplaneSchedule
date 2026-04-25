@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import loadingImage from "./assets/loading.jpg";
 import AppScreenContent from "./app/components/AppScreenContent";
 import FirebaseConfigNotice from "./app/components/FirebaseConfigNotice";
@@ -15,6 +15,7 @@ import {
   SCREEN_KEYS,
   shouldShowStepper,
 } from "./app/utils/scheduleViewUtils";
+import { syncDocumentSeo } from "./app/utils/seo";
 
 const STEP_MAP = {
   [SCREEN_KEYS.ENTRY]: 1,
@@ -80,15 +81,27 @@ function App() {
   const handleChangeLanguage = (nextLanguage) => {
     setLanguage(nextLanguage);
     i18n.changeLanguage(nextLanguage);
-    document.documentElement.lang = nextLanguage;
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("language", language);
+    }
+
+    syncDocumentSeo(language);
+  }, [language]);
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
       <header className="mb-3 w-full bg-[#1565C0] text-white shadow-lg">
-        <div className="flex h-12 w-full max-w-3xl items-center justify-between px-3">
-          <h1 className="text-xl font-bold sm:text-2xl">{t("common.appTitle")}</h1>
-          <div className="flex items-center gap-2 text-xs sm:text-sm">
+        <div className="flex w-full max-w-3xl items-start justify-between gap-3 px-3 py-3">
+          <div>
+            <h1 className="text-xl font-bold sm:text-2xl">{t("common.appTitle")}</h1>
+            <p className="mt-1 text-xs text-white/80 sm:text-sm">
+              {t("common.appSubtitle")}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 pt-1 text-xs sm:text-sm">
             <span className="hidden sm:inline">{t("common.language")}</span>
             <button
               type="button"

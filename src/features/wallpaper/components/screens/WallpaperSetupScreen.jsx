@@ -200,8 +200,10 @@ function WallpaperSetupScreen({
             disabled={!thumbnailPreviewUrl || isGenerating}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1E6DEB] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto sm:text-base"
           >
-            <span>{isGenerating ? t("wallpaper.generating") : t("schedule.next")}</span>
-            <span aria-hidden="true">→</span>
+            <span>
+              {isGenerating ? t("wallpaper.generating") : t("schedule.next")}
+            </span>
+            <span aria-hidden="true">{">"}</span>
           </button>
         </div>
       </div>

@@ -56,10 +56,10 @@ function ScheduleEntryScreen({
             type="button"
             onClick={onNext}
             disabled={schedules.length === 0}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1E6DEB] hover:bg-[#1E6DEB] active:bg-[#1565C0] pl-5 pr-5 py-3 text-sm font-semibold text-white  disabled:cursor-not-allowed disabled:bg-gray-300 sm:text-base"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1E6DEB] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300 sm:text-base"
           >
             <span>{t("schedule.next")}</span>
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true">{">"}</span>
           </button>
         </div>
       </div>

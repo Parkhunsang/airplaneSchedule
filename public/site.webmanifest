@@ -1,0 +1,12 @@
+{
+  "name": "HAN BI SCHEDULE",
+  "short_name": "HAN BI",
+  "description": "월별 비행 일정 관리와 배경화면 생성을 한 번에 할 수 있는 앱",
+  "lang": "ko",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#1565C0"
+}
