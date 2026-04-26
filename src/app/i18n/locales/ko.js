@@ -22,6 +22,18 @@ const ko = {
     continueAs: "{{email}} 계정으로 로그인됨",
     googleUser: "Google 사용자",
   },
+  migration: {
+    title: "이전 일정 가져오기",
+    description:
+      "예전에 공용 `schedules` 컬렉션에 저장해 둔 일정이 있다면, 지금 계정으로 한 번만 옮기면 됩니다.",
+    button: "이전 일정 가져오기",
+    inProgress: "가져오는 중...",
+    loading: "예전 공용 일정을 읽어서 현재 계정으로 옮기는 중입니다...",
+    success: "이전 일정 {{count}}개를 현재 계정으로 복사했습니다.",
+    empty: "공용 컬렉션에서 가져올 예전 일정이 없습니다.",
+    error:
+      "가져오기에 실패했습니다. 대부분은 `schedules` 읽기용 임시 Firestore 규칙이 아직 없을 때 발생합니다.",
+  },
   firebase: {
     setupRequired: "Firebase 설정이 필요합니다",
     missingEnvTitle: "배포 환경에 Firebase 환경 변수가 없습니다",

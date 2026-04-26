@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import loadingImage from "./assets/loading.webp";
 import AppScreenContent from "./app/components/AppScreenContent";
 import AuthNotice from "./app/components/AuthNotice";
 import FirebaseConfigNotice from "./app/components/FirebaseConfigNotice";
+import LegacyMigrationBanner from "./app/components/LegacyMigrationBanner";
 import { useAppWorkflowActions } from "./app/hooks/useAppWorkflowActions";
 import { useAuth } from "./app/hooks/useAuth";
 import { useMonthlyScheduleWorkflow } from "./app/hooks/useMonthlyScheduleWorkflow";
 import { useSchedules } from "./app/hooks/useSchedules";
 import { useThumbnailWorkflow } from "./app/hooks/useThumbnailWorkflow";
 import { useWorkflowStore } from "./app/store/useWorkflowStore";
+import { migrateLegacySchedulesToUser } from "./features/schedule/services/legacyScheduleMigrationService";
 import { deleteSchedule } from "./features/schedule/services/scheduleService";
 import { firebaseConfigError } from "./firebaseConfig";
 import { useTranslation } from "react-i18next";
@@ -27,8 +29,17 @@ const STEP_MAP = {
 
 function App() {
   const { t, i18n } = useTranslation();
-  const { user, loading: authLoading, isSigningIn, isSigningOut, handleSignIn, handleSignOut } =
-    useAuth();
+  const [isMigratingLegacySchedules, setIsMigratingLegacySchedules] = useState(false);
+  const [migrationMessage, setMigrationMessage] = useState("");
+  const [migrationTone, setMigrationTone] = useState("info");
+  const {
+    user,
+    loading: authLoading,
+    isSigningIn,
+    isSigningOut,
+    handleSignIn,
+    handleSignOut,
+  } = useAuth();
   const { schedules, setSchedules, loading } = useSchedules(user?.uid);
   const language = useWorkflowStore((state) => state.language);
   const currentScreen = useWorkflowStore((state) => state.currentScreen);
@@ -99,7 +110,35 @@ function App() {
 
   useEffect(() => {
     resetSessionState();
+    setMigrationMessage("");
+    setMigrationTone("info");
   }, [resetSessionState, user?.uid]);
+
+  const handleLegacyMigration = async () => {
+    if (!user?.uid || isMigratingLegacySchedules) {
+      return;
+    }
+
+    setIsMigratingLegacySchedules(true);
+    setMigrationTone("info");
+    setMigrationMessage(t("migration.loading"));
+
+    try {
+      const { migratedCount } = await migrateLegacySchedulesToUser(user.uid);
+      setMigrationTone("success");
+      setMigrationMessage(
+        migratedCount > 0
+          ? t("migration.success", { count: migratedCount })
+          : t("migration.empty"),
+      );
+    } catch (error) {
+      console.error("Legacy schedule migration error:", error);
+      setMigrationTone("error");
+      setMigrationMessage(t("migration.error"));
+    } finally {
+      setIsMigratingLegacySchedules(false);
+    }
+  };
 
   const isAppLoading = authLoading || (Boolean(user) && loading);
 
@@ -181,6 +220,13 @@ function App() {
             <AuthNotice isSigningIn={isSigningIn} onSignIn={handleSignIn} />
           ) : (
             <>
+              <LegacyMigrationBanner
+                isMigrating={isMigratingLegacySchedules}
+                migrationMessage={migrationMessage}
+                migrationTone={migrationTone}
+                onMigrate={handleLegacyMigration}
+              />
+
               {shouldShowStepper(currentScreen) ? (
                 <div className="mx-auto mb-5 flex w-full max-w-3xl items-center justify-between text-sm text-gray-500">
                   <span>

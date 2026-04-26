@@ -22,6 +22,18 @@ const en = {
     continueAs: "Signed in as {{email}}",
     googleUser: "Google user",
   },
+  migration: {
+    title: "Legacy schedule import",
+    description:
+      "If your older schedules were stored in the shared `schedules` collection, import them once into your account.",
+    button: "Import old schedules",
+    inProgress: "Importing...",
+    loading: "Reading the old shared schedules and moving them into your account...",
+    success: "{{count}} old schedules were copied into your account.",
+    empty: "No old schedules were found in the shared collection.",
+    error:
+      "Import failed. This usually means the temporary Firestore rule for reading `schedules` is still missing.",
+  },
   firebase: {
     setupRequired: "Firebase Setup Required",
     missingEnvTitle: "Firebase environment variables are missing in production",
