@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const getEnv = (key) => import.meta.env[key];
@@ -36,6 +37,7 @@ if (firebaseConfigError) {
 
 const app = firebaseConfigError ? null : initializeApp(firebaseConfig);
 
+export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
 
 export default app;

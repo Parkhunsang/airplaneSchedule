@@ -1,43 +1,56 @@
 import { db, firebaseConfigError } from "../../../firebaseConfig";
 import {
-  collection,
-  query,
   addDoc,
+  collection,
   deleteDoc,
   doc,
   onSnapshot,
   orderBy,
+  query,
 } from "firebase/firestore";
 
-export const subscribeSchedules = (onData, onError) => {
-  if (!db) {
-    onError?.(new Error(firebaseConfigError));
-    return () => {};
-  }
-
-  const schedulesCollection = collection(db, "schedules");
-  const orderedSchedules = query(schedulesCollection, orderBy("date", "asc"));
-
-  return onSnapshot(
-    orderedSchedules,
-    (snapshot) => {
-      const schedulesData = snapshot.docs.map((snapshotDoc) => ({
-        id: snapshotDoc.id,
-        ...snapshotDoc.data(),
-      }));
-
-      onData(schedulesData);
-    },
-    onError,
-  );
-};
-
-export const addSchedule = async (newSchedule) => {
+const getSchedulesCollection = (userId) => {
   if (!db) {
     throw new Error(firebaseConfigError);
   }
 
-  const schedulesCollection = collection(db, "schedules");
+  if (!userId) {
+    throw new Error("A signed-in user is required.");
+  }
+
+  return collection(db, "users", userId, "schedules");
+};
+
+export const subscribeSchedules = (userId, onData, onError) => {
+  if (!userId) {
+    onData([]);
+    return () => {};
+  }
+
+  try {
+    const schedulesCollection = getSchedulesCollection(userId);
+    const orderedSchedules = query(schedulesCollection, orderBy("date", "asc"));
+
+    return onSnapshot(
+      orderedSchedules,
+      (snapshot) => {
+        const schedulesData = snapshot.docs.map((snapshotDoc) => ({
+          id: snapshotDoc.id,
+          ...snapshotDoc.data(),
+        }));
+
+        onData(schedulesData);
+      },
+      onError,
+    );
+  } catch (error) {
+    onError?.(error);
+    return () => {};
+  }
+};
+
+export const addSchedule = async (userId, newSchedule) => {
+  const schedulesCollection = getSchedulesCollection(userId);
   const createdAt = newSchedule.createdAt ?? new Date().toISOString();
 
   return addDoc(schedulesCollection, {
@@ -46,11 +59,15 @@ export const addSchedule = async (newSchedule) => {
   });
 };
 
-export const deleteSchedule = async (id) => {
+export const deleteSchedule = async (userId, id) => {
   if (!db) {
     throw new Error(firebaseConfigError);
   }
 
-  const scheduleDoc = doc(db, "schedules", id);
+  if (!userId) {
+    throw new Error("A signed-in user is required.");
+  }
+
+  const scheduleDoc = doc(db, "users", userId, "schedules", id);
   await deleteDoc(scheduleDoc);
 };

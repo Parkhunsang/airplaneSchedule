@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
 import loadingImage from "./assets/loading.webp";
 import AppScreenContent from "./app/components/AppScreenContent";
+import AuthNotice from "./app/components/AuthNotice";
 import FirebaseConfigNotice from "./app/components/FirebaseConfigNotice";
 import { useAppWorkflowActions } from "./app/hooks/useAppWorkflowActions";
-import { firebaseConfigError } from "./firebaseConfig";
+import { useAuth } from "./app/hooks/useAuth";
 import { useMonthlyScheduleWorkflow } from "./app/hooks/useMonthlyScheduleWorkflow";
 import { useSchedules } from "./app/hooks/useSchedules";
 import { useThumbnailWorkflow } from "./app/hooks/useThumbnailWorkflow";
 import { useWorkflowStore } from "./app/store/useWorkflowStore";
 import { deleteSchedule } from "./features/schedule/services/scheduleService";
+import { firebaseConfigError } from "./firebaseConfig";
 import { useTranslation } from "react-i18next";
 import {
   DEFAULT_WORKFLOW_KEY,
@@ -25,7 +27,9 @@ const STEP_MAP = {
 
 function App() {
   const { t, i18n } = useTranslation();
-  const { schedules, setSchedules, loading } = useSchedules();
+  const { user, loading: authLoading, isSigningIn, isSigningOut, handleSignIn, handleSignOut } =
+    useAuth();
+  const { schedules, setSchedules, loading } = useSchedules(user?.uid);
   const language = useWorkflowStore((state) => state.language);
   const currentScreen = useWorkflowStore((state) => state.currentScreen);
   const sortOption = useWorkflowStore((state) => state.sortOption);
@@ -35,11 +39,12 @@ function App() {
   const setSelectedBgColor = useWorkflowStore(
     (state) => state.setSelectedBgColor,
   );
+  const resetSessionState = useWorkflowStore((state) => state.resetSessionState);
 
   const workflow = useMonthlyScheduleWorkflow({
     schedules,
     sortOption,
-    deleteSchedule,
+    deleteSchedule: (scheduleId) => deleteSchedule(user?.uid, scheduleId),
     screenKeys: SCREEN_KEYS,
   });
 
@@ -71,6 +76,7 @@ function App() {
     handleDownloadWallpaper,
     handleExportSchedulesToExcel,
   } = useAppWorkflowActions({
+    userId: user?.uid,
     setSchedules,
     workflow,
     thumbnailCache,
@@ -91,40 +97,67 @@ function App() {
     syncDocumentSeo(language);
   }, [language]);
 
+  useEffect(() => {
+    resetSessionState();
+  }, [resetSessionState, user?.uid]);
+
+  const isAppLoading = authLoading || (Boolean(user) && loading);
+
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
       <header className="mb-3 w-full bg-[#1565C0] text-white shadow-lg">
-        <div className="flex w-full max-w-3xl items-start justify-between gap-3 px-3 py-3">
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-3 py-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-xl font-bold sm:text-2xl">{t("common.appTitle")}</h1>
             <p className="mt-1 text-xs text-white/80 sm:text-sm">
               {t("common.appSubtitle")}
             </p>
           </div>
-          <div className="flex items-center gap-2 pt-1 text-xs sm:text-sm">
-            <span className="hidden sm:inline">{t("common.language")}</span>
-            <button
-              type="button"
-              onClick={() => handleChangeLanguage("ko")}
-              className={`rounded-full px-3 py-1 font-semibold ${
-                language === "ko"
-                  ? "bg-white text-[#1565C0]"
-                  : "bg-white/20 text-white"
-              }`}
-            >
-              KO
-            </button>
-            <button
-              type="button"
-              onClick={() => handleChangeLanguage("en")}
-              className={`rounded-full px-3 py-1 font-semibold ${
-                language === "en"
-                  ? "bg-white text-[#1565C0]"
-                  : "bg-white/20 text-white"
-              }`}
-            >
-              EN
-            </button>
+
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            <div className="flex items-center gap-2 pt-1 text-xs sm:text-sm">
+              <span className="hidden sm:inline">{t("common.language")}</span>
+              <button
+                type="button"
+                onClick={() => handleChangeLanguage("ko")}
+                className={`rounded-full px-3 py-1 font-semibold ${
+                  language === "ko"
+                    ? "bg-white text-[#1565C0]"
+                    : "bg-white/20 text-white"
+                }`}
+              >
+                KO
+              </button>
+              <button
+                type="button"
+                onClick={() => handleChangeLanguage("en")}
+                className={`rounded-full px-3 py-1 font-semibold ${
+                  language === "en"
+                    ? "bg-white text-[#1565C0]"
+                    : "bg-white/20 text-white"
+                }`}
+              >
+                EN
+              </button>
+            </div>
+
+            {user ? (
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                <span className="rounded-full bg-white/15 px-3 py-1 text-white/90">
+                  {t("auth.continueAs", {
+                    email: user.email ?? t("auth.googleUser"),
+                  })}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  disabled={isSigningOut}
+                  className="rounded-full bg-white px-3 py-1 font-semibold text-[#1565C0] disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isSigningOut ? t("auth.signingOut") : t("auth.signOutButton")}
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       </header>
@@ -133,17 +166,19 @@ function App() {
         <div className="mx-auto w-full max-w-3xl px-3">
           {firebaseConfigError ? (
             <FirebaseConfigNotice />
-          ) : loading ? (
+          ) : isAppLoading ? (
             <div className="flex min-h-screen w-full flex-col items-center justify-center gap-4 py-12">
               <img
                 src={loadingImage}
-                alt={t("common.loadingData")}
+                alt={t(authLoading ? "auth.loadingSession" : "common.loadingData")}
                 className="h-36 w-36 rounded-xl object-cover shadow-md sm:h-44 sm:w-44"
               />
               <p className="text-lg font-semibold text-gray-700">
-                {t("common.loadingData")}
+                {authLoading ? t("auth.loadingSession") : t("common.loadingData")}
               </p>
             </div>
+          ) : !user ? (
+            <AuthNotice isSigningIn={isSigningIn} onSignIn={handleSignIn} />
           ) : (
             <>
               {shouldShowStepper(currentScreen) ? (

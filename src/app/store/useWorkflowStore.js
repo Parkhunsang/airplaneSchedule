@@ -60,6 +60,20 @@ export const useWorkflowStore = create((set) => ({
   setGeneratingMonthLabel: (generatingMonthLabel) => set({ generatingMonthLabel }),
   setDeletingMonthKey: (deletingMonthKey) => set({ deletingMonthKey }),
   setNewWorkflowStartedAt: (newWorkflowStartedAt) => set({ newWorkflowStartedAt }),
+  resetSessionState: () =>
+    set({
+      currentScreen: SCREEN_KEYS.MONTH_LIST,
+      sortOption: SORT_OPTIONS.DATE_ASC,
+      selectedBgColor: DEFAULT_BG_COLOR,
+      eventTypeColors: { ...DEFAULT_EVENT_TYPE_COLORS },
+      generatedWallpaperUrl: "",
+      thumbnailCache: {},
+      activeMonthKey: null,
+      activeMonthLabel: "",
+      generatingMonthLabel: "",
+      deletingMonthKey: "",
+      newWorkflowStartedAt: null,
+    }),
   resetWorkflowVisuals: () =>
     set({
       selectedBgColor: DEFAULT_BG_COLOR,

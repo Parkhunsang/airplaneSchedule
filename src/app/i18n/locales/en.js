@@ -9,6 +9,19 @@ const en = {
     korean: "Korean",
     english: "English",
   },
+  auth: {
+    label: "Account",
+    loadingSession: "Checking your sign-in session...",
+    signInTitle: "Sign in to keep schedules separate",
+    signInDescription:
+      "Use Google sign-in so each user only sees and saves their own schedules.",
+    signInButton: "Continue with Google",
+    signingIn: "Signing in...",
+    signOutButton: "Sign out",
+    signingOut: "Signing out...",
+    continueAs: "Signed in as {{email}}",
+    googleUser: "Google user",
+  },
   firebase: {
     setupRequired: "Firebase Setup Required",
     missingEnvTitle: "Firebase environment variables are missing in production",
@@ -56,6 +69,8 @@ const en = {
     totalSchedules: "{{count}} schedules have been added.",
     noSchedulesToExport: "There are no schedules to export.",
     excelExportFailed: "Failed to create the Excel file.",
+    addFailed: "Failed to add the schedule. Please check your Firebase setup.",
+    deleteFailed: "Failed to delete the schedule.",
   },
   wallpaper: {
     setupTitle: "Wallpaper Setup",
@@ -90,6 +105,8 @@ const en = {
     savedResultTitle: "Saved Monthly Schedule Result",
     savedResultSubtitle:
       "This is the wallpaper result created from your saved monthly schedule.",
+    selectPhotoFirst: "Please choose an image first.",
+    generateFailed: "Failed to generate the wallpaper.",
   },
   monthList: {
     title: "Saved Monthly Schedules",

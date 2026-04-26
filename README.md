@@ -158,3 +158,9 @@ Cloudflare 설정 경로:
 ## License
 
 ISC
+
+## Firestore Rules
+
+- Use [firestore.rules](/C:/Users/bjjhp/Desktop/airplaneSchedule/airplaneSchedule/firestore.rules:1) for the current Firestore security policy.
+- In Firebase Console, open `Firestore Database > Rules` and paste the contents of that file.
+- The current rule allows access only when the signed-in user's `uid` matches `users/{uid}/schedules`.

@@ -9,6 +9,7 @@ import { useWorkflowStore } from "../store/useWorkflowStore";
 import { SCREEN_KEYS } from "../utils/scheduleViewUtils";
 
 export const useAppWorkflowActions = ({
+  userId,
   setSchedules,
   workflow,
   thumbnailCache,
@@ -32,7 +33,7 @@ export const useAppWorkflowActions = ({
   const handleAddSchedule = async (newSchedule) => {
     try {
       const createdAt = new Date().toISOString();
-      const createdDoc = await addSchedule({
+      const createdDoc = await addSchedule(userId, {
         ...newSchedule,
         createdAt,
       });
@@ -52,18 +53,18 @@ export const useAppWorkflowActions = ({
         ];
       });
     } catch (error) {
-      console.error("일정 추가 오류:", error);
-      alert("일정 추가에 실패했습니다. Firebase 설정을 확인해주세요.");
+      console.error("Schedule add error:", error);
+      alert(t("schedule.addFailed"));
       throw error;
     }
   };
 
   const handleDeleteSchedule = async (id) => {
     try {
-      await deleteSchedule(id);
+      await deleteSchedule(userId, id);
     } catch (error) {
-      console.error("일정 삭제 오류:", error);
-      alert("일정 삭제에 실패했습니다.");
+      console.error("Schedule delete error:", error);
+      alert(t("schedule.deleteFailed"));
     }
   };
 
@@ -81,7 +82,7 @@ export const useAppWorkflowActions = ({
     requireThumbnail = false,
   }) => {
     if (requireThumbnail && !imageUrl) {
-      alert("이미지를 먼저 선택해주세요.");
+      alert(t("wallpaper.selectPhotoFirst"));
       return false;
     }
 
@@ -99,8 +100,8 @@ export const useAppWorkflowActions = ({
       setGeneratedWallpaperUrl(wallpaperUrl);
       return true;
     } catch (error) {
-      console.error("배경화면 생성 오류:", error);
-      alert("배경화면 생성에 실패했습니다.");
+      console.error("Wallpaper generation error:", error);
+      alert(t("wallpaper.generateFailed"));
       return false;
     } finally {
       setIsGeneratingWallpaper(false);
@@ -179,17 +180,17 @@ export const useAppWorkflowActions = ({
       const XLSX = await import("xlsx");
 
       const rows = schedules.map((schedule) => ({
-        날짜: schedule.date ?? "",
-        근무종류: schedule.eventType ?? "",
-        레이오버: schedule.isLayover ? "Y" : "N",
-        출발시간: schedule.departureTime ?? "",
-        도착시간: schedule.arrivalTime ?? "",
-        홍콩출발날짜: schedule.hongKongDepartureDate ?? "",
-        홍콩출발시간: schedule.hongKongDepartureTime ?? "",
-        홍콩도착시간: schedule.hongKongArrivalTime ?? "",
-        편명: schedule.aircraft ?? "",
-        목적지: schedule.destination ?? "",
-        생성시각: schedule.createdAt ?? "",
+        Date: schedule.date ?? "",
+        EventType: schedule.eventType ?? "",
+        Layover: schedule.isLayover ? "Y" : "N",
+        DepartureTime: schedule.departureTime ?? "",
+        ArrivalTime: schedule.arrivalTime ?? "",
+        HongKongDepartureDate: schedule.hongKongDepartureDate ?? "",
+        HongKongDepartureTime: schedule.hongKongDepartureTime ?? "",
+        HongKongArrivalTime: schedule.hongKongArrivalTime ?? "",
+        FlightNumber: schedule.aircraft ?? "",
+        Destination: schedule.destination ?? "",
+        CreatedAt: schedule.createdAt ?? "",
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(rows);
@@ -197,7 +198,7 @@ export const useAppWorkflowActions = ({
       XLSX.utils.book_append_sheet(workbook, worksheet, "Schedules");
       XLSX.writeFile(workbook, `schedule-list-${Date.now()}.xlsx`);
     } catch (error) {
-      console.error("엑셀 파일 생성 오류:", error);
+      console.error("Excel export error:", error);
       alert(t("schedule.excelExportFailed"));
     }
   };
