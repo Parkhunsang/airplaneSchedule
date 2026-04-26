@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
+    "convert:images": "node scripts/convert-images.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -36,6 +37,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.24",
     "postcss": "^8.5.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.2.1"
   }
 }

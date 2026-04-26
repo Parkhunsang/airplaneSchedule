@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import loadingImage from "./assets/loading.jpg";
+import loadingImage from "./assets/loading.webp";
 import AppScreenContent from "./app/components/AppScreenContent";
 import FirebaseConfigNotice from "./app/components/FirebaseConfigNotice";
 import { useAppWorkflowActions } from "./app/hooks/useAppWorkflowActions";
