@@ -157,11 +157,6 @@ function App() {
 
             {user ? (
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                <span className="rounded-full bg-white/15 px-3 py-1 text-white/90">
-                  {t("auth.continueAs", {
-                    email: user.email ?? t("auth.googleUser"),
-                  })}
-                </span>
                 <button
                   type="button"
                   onClick={handleSignOut}
