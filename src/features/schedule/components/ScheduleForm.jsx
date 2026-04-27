@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DESTINATIONS from "../constants/destinations";
-import { getEventTypeOptions } from "../../wallpaper/constants/eventTypes";
+import { EVENT_TYPE_VALUES } from "../../wallpaper/constants/eventTypes";
 
 const DESTINATION_OPTIONS = Object.entries(DESTINATIONS).flatMap(
   ([country, destinationGroup]) =>
@@ -12,6 +12,12 @@ const DESTINATION_OPTIONS = Object.entries(DESTINATIONS).flatMap(
       searchText: `${country} ${city}`.toLowerCase(),
     })),
 );
+
+const FIXED_EVENT_TYPE_OPTIONS = {
+  flight: "Flight",
+  training: "Training",
+  standby: "Stand by",
+};
 
 const createInitialFormData = (schedule = null) => ({
   date: schedule?.date ?? "",
@@ -47,7 +53,10 @@ function ScheduleForm({
   onCancelEdit,
 }) {
   const { t } = useTranslation();
-  const eventTypeOptions = getEventTypeOptions(t);
+  const eventTypeOptions = EVENT_TYPE_VALUES.map((value) => ({
+    value,
+    label: FIXED_EVENT_TYPE_OPTIONS[value] ?? value,
+  }));
   const [formData, setFormData] = useState(createInitialFormData());
   const [destinationSearch, setDestinationSearch] = useState("");
   const [isDestinationOpen, setIsDestinationOpen] = useState(false);
