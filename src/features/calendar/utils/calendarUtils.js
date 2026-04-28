@@ -96,6 +96,10 @@ export const buildScheduleDescription = (schedule, language = "en") => {
     lines.push(`Flight number: ${schedule.aircraft}`);
   }
 
+  if (schedule.airline && schedule.eventType === "flight") {
+    lines.push(`Airline: ${schedule.airline}`);
+  }
+
   if (schedule.destination) {
     lines.push(`Destination: ${schedule.destination}`);
   }

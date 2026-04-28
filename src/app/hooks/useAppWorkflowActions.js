@@ -273,6 +273,7 @@ export const useAppWorkflowActions = ({
         HongKongDepartureDate: schedule.hongKongDepartureDate ?? "",
         HongKongDepartureTime: schedule.hongKongDepartureTime ?? "",
         HongKongArrivalTime: schedule.hongKongArrivalTime ?? "",
+        Airline: schedule.airline ?? "",
         FlightNumber: schedule.aircraft ?? "",
         Destination: schedule.destination ?? "",
         CreatedAt: schedule.createdAt ?? "",

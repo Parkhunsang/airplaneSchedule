@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import DESTINATIONS from "../constants/destinations";
 import { EVENT_TYPE_VALUES } from "../../wallpaper/constants/eventTypes";
+import AIRLINE_DESTINATIONS, {
+  DEFAULT_AIRLINE_CODE,
+  getAirlineDestinationGroups,
+} from "../constants/airlineDestinations";
 
-const DESTINATION_OPTIONS = Object.entries(DESTINATIONS).flatMap(
-  ([country, destinationGroup]) =>
+const buildDestinationOptions = (destinationGroups) =>
+  Object.entries(destinationGroups).flatMap(([country, destinationGroup]) =>
     destinationGroup.cities.map((city) => ({
       city,
       country,
       flag: destinationGroup.flag,
       searchText: `${country} ${city}`.toLowerCase(),
     })),
-);
+  );
+
+const getDestinationOptionsForAirline = (airlineCode) =>
+  buildDestinationOptions(getAirlineDestinationGroups(airlineCode));
 
 const FIXED_EVENT_TYPE_OPTIONS = {
   flight: "Flight",
@@ -40,6 +46,10 @@ const createInitialFormData = (schedule = null) => ({
     schedule?.hongKongArrivalTime && schedule.hongKongArrivalTime !== "-"
       ? schedule.hongKongArrivalTime
       : "",
+  airline:
+    schedule?.eventType === "flight"
+      ? schedule?.airline ?? DEFAULT_AIRLINE_CODE
+      : DEFAULT_AIRLINE_CODE,
   aircraft:
     schedule?.eventType === "flight" ? schedule?.aircraft ?? "" : "",
   destination:
@@ -52,11 +62,17 @@ function ScheduleForm({
   editingSchedule,
   onCancelEdit,
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const eventTypeOptions = EVENT_TYPE_VALUES.map((value) => ({
     value,
     label: FIXED_EVENT_TYPE_OPTIONS[value] ?? value,
   }));
+  const airlineOptions = Object.entries(AIRLINE_DESTINATIONS).map(
+    ([value, airline]) => ({
+      value,
+      label: airline.names[i18n.language] ?? airline.names.ko,
+    }),
+  );
   const [formData, setFormData] = useState(createInitialFormData());
   const [destinationSearch, setDestinationSearch] = useState("");
   const [isDestinationOpen, setIsDestinationOpen] = useState(false);
@@ -67,9 +83,15 @@ function ScheduleForm({
     formData.eventType === "standby" ||
     formData.eventType === "training";
   const isFlightEvent = formData.eventType === "flight";
-  const filteredDestinations = DESTINATION_OPTIONS.filter((option) =>
-    option.searchText.includes(destinationSearch.trim().toLowerCase()),
-  ).slice(0, 12);
+  const availableDestinations = getDestinationOptionsForAirline(formData.airline);
+  const availableDestinationCities = new Set(
+    availableDestinations.map((option) => option.city),
+  );
+  const filteredDestinations = availableDestinations
+    .filter((option) =>
+      option.searchText.includes(destinationSearch.trim().toLowerCase()),
+    )
+    .slice(0, 12);
 
   useEffect(() => {
     setFormData(createInitialFormData(editingSchedule));
@@ -84,6 +106,15 @@ function ScheduleForm({
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
     const nextValue = type === "checkbox" ? checked : value;
+    const nextDestinationOptions =
+      name === "airline"
+        ? getDestinationOptionsForAirline(nextValue)
+        : availableDestinations;
+    const nextDestinationCities = new Set(
+      nextDestinationOptions.map((option) => option.city),
+    );
+    const shouldResetDestination =
+      name === "airline" && !nextDestinationCities.has(formData.destination);
 
     setFormData((prev) => ({
       ...prev,
@@ -97,12 +128,23 @@ function ScheduleForm({
         : {}),
       ...(name === "eventType" && value !== "flight"
         ? {
+            airline: DEFAULT_AIRLINE_CODE,
+            destination: "",
+          }
+        : {}),
+      ...(shouldResetDestination
+        ? {
             destination: "",
           }
         : {}),
     }));
 
     if (name === "eventType" && value !== "flight") {
+      setDestinationSearch("");
+      setIsDestinationOpen(false);
+    }
+
+    if (shouldResetDestination) {
       setDestinationSearch("");
       setIsDestinationOpen(false);
     }
@@ -155,6 +197,14 @@ function ScheduleForm({
       return;
     }
 
+    if (
+      isFlightEvent &&
+      !availableDestinationCities.has(formData.destination.trim())
+    ) {
+      alert(t("schedule.invalidDestinationAlert"));
+      return;
+    }
+
     try {
       const payload = {
         date: formData.date,
@@ -171,8 +221,11 @@ function ScheduleForm({
         hongKongArrivalTime: formData.isLayover
           ? formData.hongKongArrivalTime
           : "-",
+        airline: isFlightEvent ? formData.airline : "",
         aircraft: isFlightEvent ? formData.aircraft : formData.eventType,
-        destination: isFlightEvent ? formData.destination : formData.eventType,
+        destination: isFlightEvent
+          ? formData.destination.trim()
+          : formData.eventType,
       };
 
       if (isEditing) {
@@ -198,7 +251,6 @@ function ScheduleForm({
     <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="min-h-[400px]">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          
           {isEditing ? (
             <button
               type="button"
@@ -367,6 +419,29 @@ function ScheduleForm({
               </div>
             </>
           ) : null}
+
+          <div className="flex flex-1 flex-col">
+            <label
+              htmlFor="airline"
+              className="mb-2 font-semibold text-gray-700"
+            >
+              {t("schedule.airline")} {isFlightEvent ? "*" : ""}
+            </label>
+            <select
+              id="airline"
+              name="airline"
+              value={formData.airline}
+              onChange={handleChange}
+              disabled={!isFlightEvent}
+              className="min-h-[44px] flex-1 rounded-lg border-2 border-gray-300 px-4 py-3 text-base font-medium transition focus:border-[#1565C0] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+            >
+              {airlineOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="flex flex-1 flex-col">
             <label

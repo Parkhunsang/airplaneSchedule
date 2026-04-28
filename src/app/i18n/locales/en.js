@@ -51,6 +51,7 @@ const en = {
     hongKongDepartureDate: "Hong Kong departure date",
     hongKongDepartureTime: "Hong Kong departure time",
     hongKongArrivalTime: "Hong Kong arrival time",
+    airline: "Airline",
     aircraft: "Flight number",
     destination: "Destination",
     aircraftPlaceholder: "e.g. HX080",
@@ -58,6 +59,8 @@ const en = {
     noDestinationResults: "No search results.",
     addSchedule: "Add schedule",
     requiredAlert: "Please fill in all required fields.",
+    invalidDestinationAlert:
+      "Please choose a destination served by the selected airline.",
     emptyTitle: "No schedules have been added yet.",
     emptyDescription: "Add a new schedule using the form above.",
     listTitle: "Saved schedule list",
