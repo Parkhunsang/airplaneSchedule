@@ -6,6 +6,8 @@ import {
   formatCalendarMonthLabel,
   getEventTypeLabel,
 } from "../utils/calendarUtils";
+import NextButtonIcon from "../../../assets/next_button.svg";
+import PrevButtonIcon from "../../../assets/prev_button.svg";
 
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEKDAY_LABELS_KO = ["일", "월", "화", "수", "목", "금", "토"];
@@ -51,7 +53,8 @@ const getScheduleDetailRows = (schedule, language) => {
         value: schedule.hongKongDepartureDate || "-",
       },
       {
-        label: language === "ko" ? "레이오버 출발시간" : "Layover departure time",
+        label:
+          language === "ko" ? "레이오버 출발시간" : "Layover departure time",
         value: schedule.hongKongDepartureTime || "-",
       },
       {
@@ -88,8 +91,7 @@ function CalendarDashboard({
   const { i18n } = useTranslation();
   const language = i18n.language === "ko" ? "ko" : "en";
   const [selectedDay, setSelectedDay] = React.useState(null);
-  const weekdayLabels =
-    language === "ko" ? WEEKDAY_LABELS_KO : WEEKDAY_LABELS;
+  const weekdayLabels = language === "ko" ? WEEKDAY_LABELS_KO : WEEKDAY_LABELS;
   const monthLabel = formatCalendarMonthLabel(currentMonthDate, language);
   const monthGrid = buildMonthGrid(currentMonthDate);
   const entriesByDate = buildCalendarEntriesByDate({
@@ -147,16 +149,34 @@ function CalendarDashboard({
               <button
                 type="button"
                 onClick={onPrevMonth}
-                className="rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700"
+                className="rounded-full border border-slate-300 bg-white p-1 text-sm font-semibold text-slate-700"
               >
-                {"<"}
+                <span
+                  aria-hidden="true"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1565C0] transition-transform"
+                >
+                  <img
+                    src={PrevButtonIcon}
+                    alt="이전 버튼"
+                    className="h-5 w-5"
+                  />
+                </span>
               </button>
               <button
                 type="button"
                 onClick={onNextMonth}
-                className="rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700"
+                className="rounded-full border border-slate-300 bg-white p-1 text-sm font-semibold text-slate-700"
               >
-                {">"}
+                <span
+                  aria-hidden="true"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1565C0] transition-transform"
+                >
+                  <img
+                    src={NextButtonIcon}
+                    alt="다음버튼"
+                    className="h-5 w-5"
+                  />
+                </span>
               </button>
               {isCalendarAvailable ? (
                 isCalendarConnected ? (
@@ -343,19 +363,21 @@ function CalendarDashboard({
 
                   {entry.source === "app" ? (
                     <div className="mt-3 space-y-2">
-                      {getScheduleDetailRows(entry.schedule, language).map((item) => (
-                        <div
-                          key={`${entry.id}-${item.label}`}
-                          className="flex items-start justify-between gap-4 rounded-2xl bg-white px-4 py-3"
-                        >
-                          <p className="text-sm font-medium text-slate-500">
-                            {item.label}
-                          </p>
-                          <p className="text-right text-sm font-semibold text-slate-900">
-                            {item.value}
-                          </p>
-                        </div>
-                      ))}
+                      {getScheduleDetailRows(entry.schedule, language).map(
+                        (item) => (
+                          <div
+                            key={`${entry.id}-${item.label}`}
+                            className="flex items-start justify-between gap-4 rounded-2xl bg-white px-4 py-3"
+                          >
+                            <p className="text-sm font-medium text-slate-500">
+                              {item.label}
+                            </p>
+                            <p className="text-right text-sm font-semibold text-slate-900">
+                              {item.value}
+                            </p>
+                          </div>
+                        ),
+                      )}
                     </div>
                   ) : (
                     <div className="mt-3 rounded-2xl bg-white px-4 py-3">
