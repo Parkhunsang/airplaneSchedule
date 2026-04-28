@@ -140,22 +140,22 @@ function App() {
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
       <header className="mb-3 w-full bg-[#1565C0] text-white shadow-lg">
-        <div className="mx-auto flex w-full max-w-[1080px] flex-col gap-3 px-3 py-3 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto flex w-full max-w-[1080px] flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
             <img
               src={logoImage}
               alt={`${t("common.appTitle")} logo`}
               className="h-10 w-auto shrink-0 sm:h-12"
             />
-            <div>
+            <div className="min-w-0">
               <h1 className="text-xl font-bold sm:text-2xl">{t("common.appTitle")}</h1>
-              <p className="mt-1 text-xs text-white/80 sm:text-sm">
+              <p className="mt-1 max-w-[36rem] text-xs leading-relaxed text-white/80 sm:text-sm">
                 {t("common.appSubtitle")}
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col items-start gap-3 sm:items-end">
+          <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
             <div className="flex items-center gap-2 pt-1 text-xs sm:text-sm">
               <span className="hidden sm:inline">{t("common.language")}</span>
               <button
