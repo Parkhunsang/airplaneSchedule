@@ -11,6 +11,7 @@ function CollapsibleSection({
   onToggle,
   children,
   actions = null,
+  placeToggleAfterActions = false,
 }) {
   return (
     <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -18,23 +19,45 @@ function CollapsibleSection({
         <button
           type="button"
           onClick={onToggle}
-          className="flex min-w-0 flex-1 items-center justify-between gap-3 text-left"
+          className={`flex min-w-0 flex-1 items-center gap-3 text-left ${
+            placeToggleAfterActions ? "" : "justify-between"
+          }`}
         >
           <span className="text-xl font-bold text-gray-900 sm:text-2xl">
             {title}
           </span>
-          <span
-            aria-hidden="true"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1565C0] transition-transform"
-          >
-            <img
-              src={isOpen ? upButtonIcon : downButtonIcon}
-              alt=""
-              className="h-5 w-5"
-            />
-          </span>
+          {placeToggleAfterActions ? null : (
+            <span
+              aria-hidden="true"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1565C0] transition-transform"
+            >
+              <img
+                src={isOpen ? upButtonIcon : downButtonIcon}
+                alt=""
+                className="h-5 w-5"
+              />
+            </span>
+          )}
         </button>
         {actions}
+        {placeToggleAfterActions ? (
+          <button
+            type="button"
+            onClick={onToggle}
+            className="inline-flex items-center justify-center"
+          >
+            <span
+              aria-hidden="true"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1565C0] transition-transform"
+            >
+              <img
+                src={isOpen ? upButtonIcon : downButtonIcon}
+                alt=""
+                className="h-5 w-5"
+              />
+            </span>
+          </button>
+        ) : null}
       </div>
 
       {isOpen ? <div className="p-4 sm:p-5">{children}</div> : null}
@@ -91,6 +114,7 @@ function ScheduleEntryScreen({
           title={t("schedule.listTitle")}
           isOpen={isListOpen}
           onToggle={() => setIsListOpen((prev) => !prev)}
+          placeToggleAfterActions
           actions={
             isListOpen ? (
               <div className="hidden shrink-0 items-center gap-3 sm:flex">
