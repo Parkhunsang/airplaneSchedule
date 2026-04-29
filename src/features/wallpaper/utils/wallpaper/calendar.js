@@ -12,7 +12,7 @@ import {
 import { fillRectWithShadow, fillRoundedRect } from "./canvas.js";
 import {
   DEFAULT_EVENT_TYPE_COLORS,
-  getEventTypeLabel,
+  getFixedEventTypeLabel,
 } from "../../constants/eventTypes.js";
 
 const getAirportCode = (destination = "") => {
@@ -58,7 +58,7 @@ const getEventLabel = (schedule) => {
     return getAirportCode(schedule.destination);
   }
 
-  return getEventTypeLabel(eventType);
+  return getFixedEventTypeLabel(eventType);
 };
 
 const getCellLayout = () => {
@@ -253,7 +253,7 @@ const drawFlightChip = ({ ctx, x, y, width, schedule }) => {
   ctx.fillText(
     getEventType(schedule) === "flight"
       ? schedule.aircraft || "FLT"
-      : getEventTypeLabel(getEventType(schedule)) || "EVT",
+      : getFixedEventTypeLabel(getEventType(schedule)) || "EVT",
     chipCenterX,
     chipCenterY,
   );

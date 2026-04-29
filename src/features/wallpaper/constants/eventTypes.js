@@ -1,13 +1,21 @@
 import i18n from "../../../app/i18n";
 
-export const EVENT_TYPE_VALUES = ["flight", "training", "standby"];
+export const EVENT_TYPES = [
+  { value: "flight", label: "Flight" },
+  { value: "training", label: "Training" },
+  { value: "standby", label: "Stand by" },
+];
 export const BLOCK_COLOR_VALUES = ["flight", "off", "training", "standby"];
 
 export const getEventTypeLabel = (eventType, t = i18n.t.bind(i18n)) =>
   t(`eventTypes.${eventType}`);
 
+export const getFixedEventTypeLabel = (eventType) =>
+  EVENT_TYPES.find(({ value }) => value === eventType)?.label ??
+  (eventType === "off" ? "Off" : eventType);
+
 export const getEventTypeOptions = (t = i18n.t.bind(i18n)) =>
-  EVENT_TYPE_VALUES.map((value) => ({
+  EVENT_TYPES.map(({ value }) => ({
     value,
     label: getEventTypeLabel(value, t),
   }));

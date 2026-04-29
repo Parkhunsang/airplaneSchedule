@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EVENT_TYPE_VALUES } from "../../wallpaper/constants/eventTypes";
+import { EVENT_TYPES } from "../../wallpaper/constants/eventTypes";
 import AIRLINE_DESTINATIONS, {
   DEFAULT_AIRLINE_CODE,
   getAirlineDestinationGroups,
@@ -18,12 +18,6 @@ const buildDestinationOptions = (destinationGroups) =>
 
 const getDestinationOptionsForAirline = (airlineCode) =>
   buildDestinationOptions(getAirlineDestinationGroups(airlineCode));
-
-const FIXED_EVENT_TYPE_OPTIONS = {
-  flight: "Flight",
-  training: "Training",
-  standby: "Stand by",
-};
 
 const createInitialFormData = (schedule = null) => ({
   date: schedule?.date ?? "",
@@ -63,10 +57,7 @@ function ScheduleForm({
   onCancelEdit,
 }) {
   const { t, i18n } = useTranslation();
-  const eventTypeOptions = EVENT_TYPE_VALUES.map((value) => ({
-    value,
-    label: FIXED_EVENT_TYPE_OPTIONS[value] ?? value,
-  }));
+  const eventTypeOptions = EVENT_TYPES;
   const airlineOptions = Object.entries(AIRLINE_DESTINATIONS).map(
     ([value, airline]) => ({
       value,
