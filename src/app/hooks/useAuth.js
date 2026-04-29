@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  signInWithEmail,
   signInWithGoogle,
   signOutCurrentUser,
   subscribeToAuthState,
@@ -8,14 +9,17 @@ import {
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
+  const [isDemoSigningIn, setIsDemoSigningIn] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [signInError, setSignInError] = useState("");
 
   useEffect(() => {
     const unsubscribe = subscribeToAuthState(
       (nextUser) => {
         setUser(nextUser);
         setLoading(false);
+        setSignInError("");
       },
       (error) => {
         console.error("Firebase auth error:", error);
@@ -27,12 +31,28 @@ export const useAuth = () => {
   }, []);
 
   const handleSignIn = async () => {
-    setIsSigningIn(true);
+    setIsGoogleSigningIn(true);
+    setSignInError("");
 
     try {
       await signInWithGoogle();
+    } catch (error) {
+      setSignInError(error?.message ?? "Failed to sign in with Google.");
     } finally {
-      setIsSigningIn(false);
+      setIsGoogleSigningIn(false);
+    }
+  };
+
+  const handleDemoSignIn = async ({ email, password }) => {
+    setIsDemoSigningIn(true);
+    setSignInError("");
+
+    try {
+      await signInWithEmail(email, password);
+    } catch (error) {
+      setSignInError(error?.message ?? "Failed to sign in with email.");
+    } finally {
+      setIsDemoSigningIn(false);
     }
   };
 
@@ -49,9 +69,12 @@ export const useAuth = () => {
   return {
     user,
     loading,
-    isSigningIn,
+    isGoogleSigningIn,
+    isDemoSigningIn,
     isSigningOut,
+    signInError,
     handleSignIn,
+    handleDemoSignIn,
     handleSignOut,
   };
 };

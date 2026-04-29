@@ -1,7 +1,7 @@
 const ko = {
   common: {
     appTitle: "HAN BI SCHEDULE",
-    appSubtitle: "월간 비행 일정을 관리하고 배경화면까지 한 번에 만들어 보세요",
+    appSubtitle: "월별 비행 일정을 관리하고 배경화면까지 한 번에 만들 수 있어요.",
     step: "Step",
     loadingData: "Firebase에서 데이터를 불러오는 중입니다...",
     footer: "HAN BI SCHEDULE | 비행 일정 관리 및 배경화면 생성 앱",
@@ -12,11 +12,22 @@ const ko = {
   auth: {
     label: "계정",
     loadingSession: "로그인 상태를 확인하는 중입니다...",
-    signInTitle: "일정을 안전하게 보려면 로그인해 주세요",
+    signInTitle: "일정을 안전하게 관리하려면 로그인해 주세요",
     signInDescription:
-      "Google 로그인으로 각 사용자별 일정이 분리되어 저장되도록 합니다.",
+      "Google 로그인으로 사용자별 일정을 분리해 저장할 수 있습니다.",
     signInButton: "Google로 로그인",
     signingIn: "로그인 중...",
+    demoLabel: "포트폴리오 데모",
+    demoTitle: "평가용 테스트 계정으로 로그인",
+    demoDescription:
+      "프로젝트를 검토하시는 분은 안내받은 데모 이메일과 비밀번호로 바로 로그인할 수 있습니다.",
+    emailLabel: "이메일",
+    emailPlaceholder: "데모 이메일을 입력하세요",
+    passwordLabel: "비밀번호",
+    passwordPlaceholder: "데모 비밀번호를 입력하세요",
+    demoButton: "이메일로 로그인",
+    demoSigningIn: "이메일로 로그인 중...",
+    signInError: "로그인에 실패했습니다. 테스트 계정 정보를 확인해 주세요.",
     signOutButton: "로그아웃",
     signingOut: "로그아웃 중...",
     continueAs: "{{email}} 계정으로 로그인됨",
@@ -26,13 +37,13 @@ const ko = {
     setupRequired: "Firebase 설정이 필요합니다",
     missingEnvTitle: "배포 환경에 Firebase 환경 변수가 없습니다",
     description:
-      "이 앱은 Vite 환경 변수를 사용해 Firebase를 초기화합니다. 로컬 .env.local 파일은 배포 환경으로 자동 업로드되지 않으므로 같은 값을 직접 등록해야 합니다.",
+      "이 앱은 Vite 환경 변수를 사용해 Firebase를 초기화합니다. 로컬의 .env.local 파일은 배포 환경으로 자동 업로드되지 않으므로 같은 값을 직접 등록해야 합니다.",
     missingKeys: "누락된 키",
     setupSteps: "배포 환경 설정 방법",
     step1: "배포 서비스 대시보드에서 현재 프로젝트를 엽니다.",
     step2: "Environment variables 설정 화면으로 이동합니다.",
     step3: "로컬 .env.local 파일의 값을 같은 이름의 환경 변수로 등록합니다.",
-    step4: "배포를 다시 실행하거나 최신 배포를 재시도합니다.",
+    step4: "프로젝트를 다시 배포하거나 최신 배포를 재시도합니다.",
   },
   schedule: {
     sort: "정렬",
@@ -78,7 +89,7 @@ const ko = {
   wallpaper: {
     setupTitle: "배경화면 설정",
     setupSubtitle:
-      "배경 색상, 일정 블록 색상, 사진을 선택해서 나만의 배경화면을 만들어 보세요",
+      "배경 색상, 일정 블록 색상, 사진을 선택해서 나만의 배경화면을 만들어 보세요.",
     step1: "Step 1. 배경 색상을 선택해 주세요.",
     step2: "Step 2. 일정 블록 색상을 설정해 주세요.",
     step3: "Step 3. 사진을 선택해 주세요.",
@@ -105,22 +116,22 @@ const ko = {
     goStep1: "1단계로 이동",
     goStep2: "2단계로 이동",
     home: "처음으로",
-    savedResultTitle: "저장된 월간 일정 결과",
+    savedResultTitle: "저장된 월별 일정 결과",
     savedResultSubtitle:
-      "저장한 월간 일정을 바탕으로 만든 배경화면 결과입니다.",
+      "저장한 월별 일정을 바탕으로 만든 배경화면 결과입니다.",
     selectPhotoFirst: "먼저 이미지를 선택해 주세요.",
     generateFailed: "배경화면 생성에 실패했습니다.",
   },
   monthList: {
-    title: "저장된 월간 일정",
+    title: "저장된 월별 일정",
     description:
-      "저장된 월을 선택하면 해당 일정으로 만든 배경화면 결과를 바로 확인할 수 있습니다.",
+      "저장한 월을 선택하면 해당 일정으로 만든 배경화면 결과를 바로 확인할 수 있습니다.",
     totalSchedules: "총 {{count}}개의 일정",
     opening: "불러오는 중...",
     open: "열기",
     deleting: "삭제 중...",
     delete: "삭제",
-    empty: "아직 저장된 월간 일정이 없습니다.",
+    empty: "아직 저장된 월별 일정이 없습니다.",
     startNew: "새 일정 만들기",
   },
   eventTypes: {

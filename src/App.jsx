@@ -32,9 +32,12 @@ function App() {
   const {
     user,
     loading: authLoading,
-    isSigningIn,
+    isGoogleSigningIn,
+    isDemoSigningIn,
     isSigningOut,
+    signInError,
     handleSignIn,
+    handleDemoSignIn,
     handleSignOut,
   } = useAuth();
   const { schedules, setSchedules, loading } = useSchedules(user?.uid);
@@ -214,7 +217,13 @@ function App() {
               </p>
             </div>
           ) : !user ? (
-            <AuthNotice isSigningIn={isSigningIn} onSignIn={handleSignIn} />
+            <AuthNotice
+              isGoogleSigningIn={isGoogleSigningIn}
+              isDemoSigningIn={isDemoSigningIn}
+              signInError={signInError}
+              onSignIn={handleSignIn}
+              onDemoSignIn={handleDemoSignIn}
+            />
           ) : (
             <>
               {shouldShowStepper(currentScreen) ? (
