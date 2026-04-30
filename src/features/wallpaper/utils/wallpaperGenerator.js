@@ -11,6 +11,7 @@ import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   MONTH_LABELS,
+  WALLPAPER_SIX_WEEK_VERTICAL_OFFSET,
   scale,
 } from "./wallpaper/constants.js";
 
@@ -51,7 +52,9 @@ export const generateWallpaperImage = async ({
   const month = MONTH_LABELS[referenceDate.getMonth()];
   const thumbnail = await loadImage(thumbnailImageUrl);
   const { weekCount } = getMonthGrid(referenceDate);
-  const photoHeight = scale(weekCount > 5 ? 236 : 288);
+  const verticalOffset =
+    weekCount > 5 ? WALLPAPER_SIX_WEEK_VERTICAL_OFFSET : 0;
+  const photoHeight = scale(288 - verticalOffset);
 
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -110,22 +113,22 @@ export const generateWallpaperImage = async ({
   fillRoundedRect(
     ctx,
     scale(17),
-    scale(211),
+    scale(211 - verticalOffset),
     scale(142),
     scale(67),
     0,
     withAlpha("#ffffff", 0.12),
   );
   ctx.fillStyle = accentColor;
-  ctx.fillRect(scale(28), scale(221), scale(1), scale(14));
+  ctx.fillRect(scale(28), scale(221 - verticalOffset), scale(1), scale(14));
   ctx.fillStyle = accentColor;
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
   // 상단 월/제목 텍스트의 폰트도 여기서 캔버스 font 문자열로 직접 지정합니다.
   ctx.font = `700 ${scale(14)}px Belgrano, serif`;
-  ctx.fillText(month, scale(33), scale(220));
+  ctx.fillText(month, scale(33), scale(220 - verticalOffset));
   ctx.font = `700 ${scale(26)}px Belgrano, serif`;
-  ctx.fillText("Schedule", scale(26), scale(238));
+  ctx.fillText("Schedule", scale(26), scale(238 - verticalOffset));
 
   drawCalendar({
     ctx,

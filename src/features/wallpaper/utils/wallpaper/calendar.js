@@ -1,4 +1,9 @@
-import { DAY_LABELS, MONTH_LABELS, scale } from "./constants.js";
+import {
+  DAY_LABELS,
+  MONTH_LABELS,
+  WALLPAPER_SIX_WEEK_VERTICAL_OFFSET,
+  scale,
+} from "./constants.js";
 import { withAlpha } from "./color.js";
 import {
   addDays,
@@ -61,12 +66,11 @@ const getEventLabel = (schedule) => {
   return getFixedEventTypeLabel(eventType);
 };
 
-const SIX_WEEK_VERTICAL_OFFSET = 52;
-
 const getCellLayout = (weekCount) => {
   const cardLefts = [13, 65, 117, 169, 221, 273, 325];
   const rowCount = Math.max(weekCount, 5);
-  const verticalOffset = weekCount > 5 ? SIX_WEEK_VERTICAL_OFFSET : 0;
+  const verticalOffset =
+    weekCount > 5 ? WALLPAPER_SIX_WEEK_VERTICAL_OFFSET : 0;
   const dateRowStart = 346 - verticalOffset;
   const cardRowStart = 366 - verticalOffset;
   const rowGap = 92;
@@ -372,7 +376,8 @@ export const drawCalendar = ({
     getMonthGrid(referenceDate);
   const calendarX = scale(17);
   const calendarWidth = scale(356);
-  const verticalOffset = weekCount > 5 ? SIX_WEEK_VERTICAL_OFFSET : 0;
+  const verticalOffset =
+    weekCount > 5 ? WALLPAPER_SIX_WEEK_VERTICAL_OFFSET : 0;
   const weekdayTop = scale(312 - verticalOffset);
   const dividerY = scale(336 - verticalOffset);
   const layout = getCellLayout(weekCount);
